@@ -1,0 +1,21 @@
+{
+    "name": "marein/connect-four",
+    "description": "Connect Four implementation with php.",
+    "authors": [
+        {
+            "name": "Markus Reinhold",
+            "email": "markusreinhold@icloud.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Marein\\ConnectFour\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.3"
+    }
+}

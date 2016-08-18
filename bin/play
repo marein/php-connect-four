@@ -1,0 +1,46 @@
+#!/usr/bin/env php
+<?php
+
+namespace {
+
+    use Marein\ConnectFour\Player\ConsolePlayer;
+    use Marein\ConnectFour\View\GameView;
+    use Marein\ConnectFour\Domain\Game\Game;
+    use Marein\ConnectFour\Domain\Game\Size;
+    use Marein\ConnectFour\Player\RandomNpcPlayer;
+    use Marein\ConnectFour\Domain\Game\Stone;
+
+    require_once __DIR__ . '/../vendor/autoload.php';
+
+    $game = Game::createEmpty(new Size(7, 6), 4);
+    $view = new GameView();
+
+    $player1 = new ConsolePlayer($game);
+//    $player1 = new RandomNpcPlayer($game, 0.1);
+    $player2 = new RandomNpcPlayer($game, 0.5);
+
+    $view->render($game);
+
+    while (!$game->isDraw() && !$game->isWin()) {
+
+        $player1->play(Stone::pickUpRed());
+        $view->render($game);
+
+        if ($game->isWin()) {
+            break;
+        }
+
+        $player2->play(Stone::pickUpYellow());
+        $view->render($game);
+    }
+
+    if ($game->isDraw()) {
+        echo 'Draw.';
+    } else if ($game->winningStone() == Stone::pickUpRed()) {
+        echo 'Player 1 win.';
+    } else if ($game->winningStone() == Stone::pickUpYellow()) {
+        echo 'Player 2 win';
+    }
+
+    echo PHP_EOL . PHP_EOL;
+}

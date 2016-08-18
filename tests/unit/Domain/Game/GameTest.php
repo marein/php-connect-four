@@ -1,0 +1,177 @@
+<?php
+
+namespace Marein\ConnectFour\Domain\Game;
+
+use Marein\ConnectFour\Domain\Game\Exception\ColumnAlreadyFilledException;
+use Marein\ConnectFour\Domain\Game\Exception\GameFinishedException;
+use Marein\ConnectFour\Domain\Game\Exception\OutOfSizeException;
+use Marein\ConnectFour\Domain\Game\Exception\NextStoneExpectedException;
+
+class GameTest extends \PHPUnit_Framework_TestCase
+{
+    /**
+     * @test
+     */
+    public function itShouldBeCreatedWithEmptyFields()
+    {
+        $game = Game::createEmpty(new Size(4, 4), 4);
+
+        $filtered = array_filter($game->fields(), function ($field) {
+            /** @var Field $field */
+            return !$field->isEmpty();
+        });
+
+        $this->assertCount(0, $filtered);
+    }
+
+    /**
+     * @test
+     */
+    public function itFieldCountShouldBeTheProductOfSize()
+    {
+        $game = Game::createEmpty(new Size(7, 6), 4);
+
+        $this->assertCount(42, $game->fields());
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldBeDrawWhenNoMatchIsFoundAndAllFieldsAreFilled()
+    {
+        $game = Game::createEmpty(new Size(3, 2), 4);
+
+        $game->dropStone(Stone::pickUpRed(), 1);
+        $game->dropStone(Stone::pickUpYellow(), 1);
+        $game->dropStone(Stone::pickUpRed(), 2);
+        $game->dropStone(Stone::pickUpYellow(), 2);
+        $game->dropStone(Stone::pickUpRed(), 3);
+        $game->dropStone(Stone::pickUpYellow(), 3);
+
+        $this->assertTrue($game->isDraw());
+        $this->assertFalse($game->isWin());
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldBeWinWhenMatchIsFound()
+    {
+        $game = Game::createEmpty(new Size(4, 2), 4);
+
+        $game->dropStone(Stone::pickUpRed(), 1);
+        $game->dropStone(Stone::pickUpYellow(), 1);
+        $game->dropStone(Stone::pickUpRed(), 2);
+        $game->dropStone(Stone::pickUpYellow(), 2);
+        $game->dropStone(Stone::pickUpRed(), 3);
+        $game->dropStone(Stone::pickUpYellow(), 3);
+        $game->dropStone(Stone::pickUpRed(), 4);
+
+        $this->assertFalse($game->isDraw());
+        $this->assertTrue($game->isWin());
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldBeWinWhenLastDropIsAMatch()
+    {
+        $game = Game::createEmpty(new Size(4, 4), 4);
+
+        $game->dropStone(Stone::pickUpRed(), 2);
+        $game->dropStone(Stone::pickUpYellow(), 1);
+        $game->dropStone(Stone::pickUpRed(), 2);
+        $game->dropStone(Stone::pickUpYellow(), 1);
+        $game->dropStone(Stone::pickUpRed(), 2);
+        $game->dropStone(Stone::pickUpYellow(), 1);
+        $game->dropStone(Stone::pickUpRed(), 3);
+        $game->dropStone(Stone::pickUpYellow(), 2);
+        $game->dropStone(Stone::pickUpRed(), 3);
+        $game->dropStone(Stone::pickUpYellow(), 3);
+        $game->dropStone(Stone::pickUpRed(), 3);
+        $game->dropStone(Stone::pickUpYellow(), 4);
+        $game->dropStone(Stone::pickUpRed(), 4);
+        $game->dropStone(Stone::pickUpYellow(), 4);
+        $game->dropStone(Stone::pickUpRed(), 4);
+        $game->dropStone(Stone::pickUpYellow(), 1);
+
+        $this->assertFalse($game->isDraw());
+        $this->assertTrue($game->isWin());
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldExpectOneStoneAfterAnother()
+    {
+        $this->expectException(NextStoneExpectedException::class);
+
+        $game = Game::createEmpty(new Size(4, 2), 4);
+
+        $game->dropStone(Stone::pickUpRed(), 1);
+        $game->dropStone(Stone::pickUpRed(), 1);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldNotBePlayableWhenDraw()
+    {
+        $this->expectException(GameFinishedException::class);
+
+        $game = Game::createEmpty(new Size(3, 2), 4);
+
+        $game->dropStone(Stone::pickUpRed(), 1);
+        $game->dropStone(Stone::pickUpYellow(), 1);
+        $game->dropStone(Stone::pickUpRed(), 2);
+        $game->dropStone(Stone::pickUpYellow(), 2);
+        $game->dropStone(Stone::pickUpRed(), 3);
+        $game->dropStone(Stone::pickUpYellow(), 3);
+        $game->dropStone(Stone::pickUpRed(), 3);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldNotBePlayableWhenWin()
+    {
+        $this->expectException(GameFinishedException::class);
+
+        $game = Game::createEmpty(new Size(4, 2), 4);
+
+        $game->dropStone(Stone::pickUpRed(), 1);
+        $game->dropStone(Stone::pickUpYellow(), 1);
+        $game->dropStone(Stone::pickUpRed(), 2);
+        $game->dropStone(Stone::pickUpYellow(), 2);
+        $game->dropStone(Stone::pickUpRed(), 3);
+        $game->dropStone(Stone::pickUpYellow(), 3);
+        $game->dropStone(Stone::pickUpRed(), 4);
+        $game->dropStone(Stone::pickUpYellow(), 3);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldThrowExceptionIfGivenColumnIsOutOfSize()
+    {
+        $this->expectException(OutOfSizeException::class);
+
+        $game = Game::createEmpty(new Size(4, 2), 4);
+
+        $game->dropStone(Stone::pickUpRed(), 5);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldThrowExceptionIfColumnIsAlreadyFilled()
+    {
+        $this->expectException(ColumnAlreadyFilledException::class);
+
+        $game = Game::createEmpty(new Size(4, 2), 4);
+
+        $game->dropStone(Stone::pickUpRed(), 1);
+        $game->dropStone(Stone::pickUpYellow(), 1);
+        $game->dropStone(Stone::pickUpRed(), 1);
+    }
+}
