@@ -54,21 +54,85 @@ class GameTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @dataProvider winWhenMatchProvider
+     *
+     * @param array $moves
      */
-    public function itShouldBeWinWhenMatchIsFound()
+    public function itShouldBeWinWhenMatchIsFound(array $moves)
     {
-        $game = Game::createEmpty(new Size(4, 2), 4);
+        $game = Game::createEmpty(new Size(7, 6), 4);
 
-        $game->dropStone(Stone::pickUpRed(), 1);
-        $game->dropStone(Stone::pickUpYellow(), 1);
-        $game->dropStone(Stone::pickUpRed(), 2);
-        $game->dropStone(Stone::pickUpYellow(), 2);
-        $game->dropStone(Stone::pickUpRed(), 3);
-        $game->dropStone(Stone::pickUpYellow(), 3);
-        $game->dropStone(Stone::pickUpRed(), 4);
+        foreach ($moves as $move) {
+            $game->dropStone($move[0], $move[1]);
+        }
 
         $this->assertFalse($game->isDraw());
         $this->assertTrue($game->isWin());
+    }
+
+    /**
+     * @return array
+     */
+    public function winWhenMatchProvider()
+    {
+        return [
+            // Match in column
+            [
+                [
+                    [Stone::pickUpRed(), 1],
+                    [Stone::pickUpYellow(), 2],
+                    [Stone::pickUpRed(), 1],
+                    [Stone::pickUpYellow(), 2],
+                    [Stone::pickUpRed(), 1],
+                    [Stone::pickUpYellow(), 2],
+                    [Stone::pickUpRed(), 1]
+                ]
+            ],
+            // Match in row
+            [
+                [
+                    [Stone::pickUpRed(), 1],
+                    [Stone::pickUpYellow(), 1],
+                    [Stone::pickUpRed(), 2],
+                    [Stone::pickUpYellow(), 2],
+                    [Stone::pickUpRed(), 3],
+                    [Stone::pickUpYellow(), 3],
+                    [Stone::pickUpRed(), 4]
+                ]
+            ],
+            // Match in diagonal down
+            [
+                [
+                    [Stone::pickUpRed(), 7],
+                    [Stone::pickUpYellow(), 6],
+                    [Stone::pickUpRed(), 6],
+                    [Stone::pickUpYellow(), 5],
+                    [Stone::pickUpRed(), 4],
+                    [Stone::pickUpYellow(), 5],
+                    [Stone::pickUpRed(), 5],
+                    [Stone::pickUpYellow(), 4],
+                    [Stone::pickUpRed(), 4],
+                    [Stone::pickUpYellow(), 1],
+                    [Stone::pickUpRed(), 4]
+                ]
+            ],
+            // Match in diagonal up
+            [
+                [
+                    [Stone::pickUpRed(), 1],
+                    [Stone::pickUpYellow(), 2],
+                    [Stone::pickUpRed(), 2],
+                    [Stone::pickUpYellow(), 3],
+                    [Stone::pickUpRed(), 3],
+                    [Stone::pickUpYellow(), 4],
+                    [Stone::pickUpRed(), 3],
+                    [Stone::pickUpYellow(), 4],
+                    [Stone::pickUpRed(), 4],
+                    [Stone::pickUpYellow(), 6],
+                    [Stone::pickUpRed(), 4]
+                ]
+            ]
+        ];
     }
 
     /**
