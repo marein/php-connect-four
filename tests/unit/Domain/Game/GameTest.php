@@ -4,6 +4,7 @@ namespace Marein\ConnectFour\Domain\Game;
 
 use Marein\ConnectFour\Domain\Game\Exception\ColumnAlreadyFilledException;
 use Marein\ConnectFour\Domain\Game\Exception\GameFinishedException;
+use Marein\ConnectFour\Domain\Game\Exception\GameNotWinnableException;
 use Marein\ConnectFour\Domain\Game\Exception\OutOfSizeException;
 use Marein\ConnectFour\Domain\Game\Exception\NextStoneExpectedException;
 
@@ -39,14 +40,16 @@ class GameTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldBeDrawWhenNoMatchIsFoundAndAllFieldsAreFilled()
     {
-        $game = Game::createEmpty(new Size(3, 2), 4);
+        $game = Game::createEmpty(new Size(2, 4), 4);
 
+        $game->dropStone(Stone::pickUpRed(), 1);
+        $game->dropStone(Stone::pickUpYellow(), 1);
         $game->dropStone(Stone::pickUpRed(), 1);
         $game->dropStone(Stone::pickUpYellow(), 1);
         $game->dropStone(Stone::pickUpRed(), 2);
         $game->dropStone(Stone::pickUpYellow(), 2);
-        $game->dropStone(Stone::pickUpRed(), 3);
-        $game->dropStone(Stone::pickUpYellow(), 3);
+        $game->dropStone(Stone::pickUpRed(), 2);
+        $game->dropStone(Stone::pickUpYellow(), 2);
 
         $this->assertTrue($game->isDraw());
         $this->assertFalse($game->isWin());
@@ -183,15 +186,17 @@ class GameTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectException(GameFinishedException::class);
 
-        $game = Game::createEmpty(new Size(3, 2), 4);
+        $game = Game::createEmpty(new Size(2, 4), 4);
 
+        $game->dropStone(Stone::pickUpRed(), 1);
+        $game->dropStone(Stone::pickUpYellow(), 1);
         $game->dropStone(Stone::pickUpRed(), 1);
         $game->dropStone(Stone::pickUpYellow(), 1);
         $game->dropStone(Stone::pickUpRed(), 2);
         $game->dropStone(Stone::pickUpYellow(), 2);
-        $game->dropStone(Stone::pickUpRed(), 3);
-        $game->dropStone(Stone::pickUpYellow(), 3);
-        $game->dropStone(Stone::pickUpRed(), 3);
+        $game->dropStone(Stone::pickUpRed(), 2);
+        $game->dropStone(Stone::pickUpYellow(), 2);
+        $game->dropStone(Stone::pickUpRed(), 1);
     }
 
     /**
@@ -237,5 +242,31 @@ class GameTest extends \PHPUnit_Framework_TestCase
         $game->dropStone(Stone::pickUpRed(), 1);
         $game->dropStone(Stone::pickUpYellow(), 1);
         $game->dropStone(Stone::pickUpRed(), 1);
+    }
+
+    /**
+     * @test
+     * @dataProvider exceptionIfNotWinnableProvider
+     *
+     * @param $size
+     * @param $requiredMatches
+     */
+    public function itShouldThrowExceptionIfGameIsNotWinnable($size, $requiredMatches)
+    {
+        $this->expectException(GameNotWinnableException::class);
+
+        Game::createEmpty($size, $requiredMatches);
+    }
+
+    /**
+     * @return array
+     */
+    public function exceptionIfNotWinnableProvider()
+    {
+        return [
+            [new Size(3, 2), 4],
+            [new Size(12, 10), 13],
+            [new Size(6, 7), 8]
+        ];
     }
 }

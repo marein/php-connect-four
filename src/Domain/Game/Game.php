@@ -4,6 +4,7 @@ namespace Marein\ConnectFour\Domain\Game;
 
 use Marein\ConnectFour\Domain\Game\Exception\ColumnAlreadyFilledException;
 use Marein\ConnectFour\Domain\Game\Exception\GameFinishedException;
+use Marein\ConnectFour\Domain\Game\Exception\GameNotWinnableException;
 use Marein\ConnectFour\Domain\Game\Exception\NextStoneExpectedException;
 use Marein\ConnectFour\Domain\Game\Exception\OutOfSizeException;
 
@@ -45,6 +46,8 @@ class Game
      * @param Field[] $fields
      * @param Size    $size
      * @param int     $requiredMatches
+     *
+     * @throws GameNotWinnableException
      */
     private function __construct(array $fields, Size $size, $requiredMatches)
     {
@@ -54,6 +57,8 @@ class Game
         $this->lastUsedStone = null;
         $this->dropCounter = 0;
         $this->winningStone = null;
+
+        $this->guardGameIsWinnable();
     }
 
     /*************************************************************
@@ -169,6 +174,18 @@ class Game
     /*************************************************************
      *                          Guards
      *************************************************************/
+
+    /**
+     * Guard that [Game] is winnable.
+     *
+     * @throws GameNotWinnableException
+     */
+    private function guardGameIsWinnable()
+    {
+        if ($this->requiredMatches > $this->size()->height() && $this->requiredMatches > $this->size()->width()) {
+            throw new GameNotWinnableException();
+        }
+    }
 
     /**
      * Guard if the given [Stone] is not the expected one.
