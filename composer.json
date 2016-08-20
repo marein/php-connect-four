@@ -1,6 +1,6 @@
 {
-    "name": "marein/connect-four",
-    "description": "Connect Four implementation with php.",
+    "name": "marein/php-connect-four",
+    "description": "Connect Four implementation with PHP.",
     "authors": [
         {
             "name": "Markus Reinhold",

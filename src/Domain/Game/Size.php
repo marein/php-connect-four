@@ -31,7 +31,7 @@ class Size
         }
 
         if (($width * $height) % 2 != 0) {
-            throw new InvalidSizeException('Product of width and high must be an even number.');
+            throw new InvalidSizeException('Product of width and height must be an even number.');
         }
 
         $this->height = $height;
