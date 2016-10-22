@@ -34,7 +34,7 @@ class Field
      */
     public static function createEmpty(Point $point)
     {
-        return new self($point);
+        return new static($point);
     }
 
     /**

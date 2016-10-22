@@ -56,7 +56,7 @@ class SizeTest extends \PHPUnit_Framework_TestCase
             [-1, 3],
             [2, -3],
             [-1, -3],
-            [1, 1],
+            [1, 1]
         ];
     }
 }

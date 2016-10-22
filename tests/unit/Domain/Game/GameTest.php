@@ -15,7 +15,10 @@ class GameTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldBeCreatedWithEmptyFields()
     {
-        $game = Game::createEmpty(new Size(4, 4), 4);
+        $game = Game::open(Configuration::custom(
+            new Size(4, 4),
+            new RequiredMatches(4)
+        ));
 
         $filtered = array_filter($game->fields(), function ($field) {
             /** @var Field $field */
@@ -30,7 +33,7 @@ class GameTest extends \PHPUnit_Framework_TestCase
      */
     public function itFieldCountShouldBeTheProductOfSize()
     {
-        $game = Game::createEmpty(new Size(7, 6), 4);
+        $game = Game::open(Configuration::common());
 
         $this->assertCount(42, $game->fields());
     }
@@ -40,7 +43,10 @@ class GameTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldBeDrawWhenNoMatchIsFoundAndAllFieldsAreFilled()
     {
-        $game = Game::createEmpty(new Size(2, 4), 4);
+        $game = Game::open(Configuration::custom(
+            new Size(2, 4),
+            new RequiredMatches(4)
+        ));
 
         $game->dropStone(Stone::pickUpRed(), 1);
         $game->dropStone(Stone::pickUpYellow(), 1);
@@ -63,7 +69,7 @@ class GameTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldBeWinWhenMatchIsFound(array $moves)
     {
-        $game = Game::createEmpty(new Size(7, 6), 4);
+        $game = Game::open(Configuration::common());
 
         foreach ($moves as $move) {
             $game->dropStone($move[0], $move[1]);
@@ -143,7 +149,10 @@ class GameTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldBeWinWhenLastDropIsAMatch()
     {
-        $game = Game::createEmpty(new Size(4, 4), 4);
+        $game = Game::open(Configuration::custom(
+            new Size(4, 4),
+            new RequiredMatches(4)
+        ));
 
         $game->dropStone(Stone::pickUpRed(), 2);
         $game->dropStone(Stone::pickUpYellow(), 1);
@@ -173,7 +182,10 @@ class GameTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectException(NextStoneExpectedException::class);
 
-        $game = Game::createEmpty(new Size(4, 2), 4);
+        $game = Game::open(Configuration::custom(
+            new Size(4, 2),
+            new RequiredMatches(4)
+        ));
 
         $game->dropStone(Stone::pickUpRed(), 1);
         $game->dropStone(Stone::pickUpRed(), 1);
@@ -186,7 +198,10 @@ class GameTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectException(GameFinishedException::class);
 
-        $game = Game::createEmpty(new Size(2, 4), 4);
+        $game = Game::open(Configuration::custom(
+            new Size(2, 4),
+            new RequiredMatches(4)
+        ));
 
         $game->dropStone(Stone::pickUpRed(), 1);
         $game->dropStone(Stone::pickUpYellow(), 1);
@@ -206,7 +221,10 @@ class GameTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectException(GameFinishedException::class);
 
-        $game = Game::createEmpty(new Size(4, 2), 4);
+        $game = Game::open(Configuration::custom(
+            new Size(4, 2),
+            new RequiredMatches(4)
+        ));
 
         $game->dropStone(Stone::pickUpRed(), 1);
         $game->dropStone(Stone::pickUpYellow(), 1);
@@ -225,7 +243,10 @@ class GameTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectException(OutOfSizeException::class);
 
-        $game = Game::createEmpty(new Size(4, 2), 4);
+        $game = Game::open(Configuration::custom(
+            new Size(4, 2),
+            new RequiredMatches(4)
+        ));
 
         $game->dropStone(Stone::pickUpRed(), 5);
     }
@@ -237,36 +258,13 @@ class GameTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectException(ColumnAlreadyFilledException::class);
 
-        $game = Game::createEmpty(new Size(4, 2), 4);
+        $game = Game::open(Configuration::custom(
+            new Size(4, 2),
+            new RequiredMatches(4)
+        ));
 
         $game->dropStone(Stone::pickUpRed(), 1);
         $game->dropStone(Stone::pickUpYellow(), 1);
         $game->dropStone(Stone::pickUpRed(), 1);
-    }
-
-    /**
-     * @test
-     * @dataProvider exceptionIfNotWinnableProvider
-     *
-     * @param $size
-     * @param $requiredMatches
-     */
-    public function itShouldThrowExceptionIfGameIsNotWinnable($size, $requiredMatches)
-    {
-        $this->expectException(GameNotWinnableException::class);
-
-        Game::createEmpty($size, $requiredMatches);
-    }
-
-    /**
-     * @return array
-     */
-    public function exceptionIfNotWinnableProvider()
-    {
-        return [
-            [new Size(3, 2), 4],
-            [new Size(12, 10), 13],
-            [new Size(6, 7), 8]
-        ];
     }
 }

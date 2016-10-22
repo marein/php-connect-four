@@ -29,7 +29,7 @@ class Stone
      */
     public static function pickUpYellow()
     {
-        return new self(self::YELLOW);
+        return new static(static::YELLOW);
     }
 
     /**
@@ -39,7 +39,7 @@ class Stone
      */
     public static function pickUpRed()
     {
-        return new self(self::RED);
+        return new static(static::RED);
     }
 
     /**

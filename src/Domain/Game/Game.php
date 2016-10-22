@@ -4,7 +4,6 @@ namespace Marein\ConnectFour\Domain\Game;
 
 use Marein\ConnectFour\Domain\Game\Exception\ColumnAlreadyFilledException;
 use Marein\ConnectFour\Domain\Game\Exception\GameFinishedException;
-use Marein\ConnectFour\Domain\Game\Exception\GameNotWinnableException;
 use Marein\ConnectFour\Domain\Game\Exception\NextStoneExpectedException;
 use Marein\ConnectFour\Domain\Game\Exception\OutOfSizeException;
 
@@ -16,14 +15,9 @@ class Game
     private $fields;
 
     /**
-     * @var Size
+     * @var Configuration
      */
-    private $size;
-
-    /**
-     * @var int
-     */
-    private $requiredMatches;
+    private $configuration;
 
     /**
      * @var Stone
@@ -43,22 +37,21 @@ class Game
     /**
      * Game constructor.
      *
-     * @param Field[] $fields
-     * @param Size    $size
-     * @param int     $requiredMatches
-     *
-     * @throws GameNotWinnableException
+     * @param Configuration $configuration
      */
-    private function __construct(array $fields, Size $size, $requiredMatches)
+    private function __construct(Configuration $configuration)
     {
-        $this->fields = $fields;
-        $this->size = $size;
-        $this->requiredMatches = $requiredMatches;
+        $this->configuration = $configuration;
         $this->lastUsedStone = null;
         $this->dropCounter = 0;
         $this->winningStone = null;
+        $this->fields = [];
 
-        $this->guardGameIsWinnable();
+        for ($y = 0; $y < $configuration->size()->height(); $y++) {
+            for ($x = 0; $x < $configuration->size()->width(); $x++) {
+                $this->fields[] = Field::createEmpty(new Point($x + 1, $y + 1));
+            }
+        }
     }
 
     /*************************************************************
@@ -66,24 +59,15 @@ class Game
      *************************************************************/
 
     /**
-     * Create a [Game] with empty [Field]s.
+     * Opens a new [Game].
      *
-     * @param Size $size
-     * @param int  $requiredMatches
+     * @param Configuration $configuration
      *
      * @return Game
      */
-    public static function createEmpty(Size $size, $requiredMatches)
+    public static function open(Configuration $configuration)
     {
-        $fields = [];
-
-        for ($y = 0; $y < $size->height(); $y++) {
-            for ($x = 0; $x < $size->width(); $x++) {
-                $fields[] = Field::createEmpty(new Point($x + 1, $y + 1));
-            }
-        }
-
-        return new self($fields, $size, $requiredMatches);
+        return new static($configuration);
     }
 
     /*************************************************************
@@ -142,12 +126,12 @@ class Game
 
         $diagonalDown = $this->checkFieldsForWin(
             $stone,
-            $this->findFieldsByPoints(Point::createPointsInDiagonalDown($point, $this->size()))
+            $this->findFieldsByPoints(Point::createPointsInDiagonalDown($point, $this->configuration()->size()))
         );
 
         $diagonalUp = $this->checkFieldsForWin(
             $stone,
-            $this->findFieldsByPoints(Point::createPointsInDiagonalUp($point, $this->size()))
+            $this->findFieldsByPoints(Point::createPointsInDiagonalUp($point, $this->configuration()->size()))
         );
 
         if ($column || $row || $diagonalDown || $diagonalUp) {
@@ -167,25 +151,13 @@ class Game
     {
         return strpos(
             implode($fields),
-            str_repeat($stone->color(), $this->requiredMatches)
+            str_repeat($stone->color(), $this->configuration->requiredMatches()->value())
         ) !== false;
     }
 
     /*************************************************************
      *                          Guards
      *************************************************************/
-
-    /**
-     * Guard that [Game] is winnable.
-     *
-     * @throws GameNotWinnableException
-     */
-    private function guardGameIsWinnable()
-    {
-        if ($this->requiredMatches > $this->size()->height() && $this->requiredMatches > $this->size()->width()) {
-            throw new GameNotWinnableException();
-        }
-    }
 
     /**
      * Guard if the given [Stone] is not the expected one.
@@ -222,7 +194,7 @@ class Game
      */
     private function guardColumnFitsInSize($column)
     {
-        if ($column > $this->size()->width()) {
+        if ($column > $this->configuration()->size()->width()) {
             throw new OutOfSizeException();
         }
     }
@@ -314,13 +286,13 @@ class Game
     }
 
     /**
-     * Returns the current [Size] of the [Game].
+     * Returns the [Configuration] of the [Game].
      *
-     * @return Size
+     * @return Configuration
      */
-    public function size()
+    public function configuration()
     {
-        return $this->size;
+        return $this->configuration;
     }
 
     /**
@@ -340,7 +312,9 @@ class Game
      */
     public function isDraw()
     {
-        return !$this->winningStone && $this->dropCounter == $this->size()->width() * $this->size()->height();
+        return
+            !$this->winningStone &&
+            $this->dropCounter == $this->configuration()->size()->width() * $this->configuration()->size()->height();
     }
 
     /**

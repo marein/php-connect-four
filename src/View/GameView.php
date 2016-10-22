@@ -35,7 +35,7 @@ class GameView
      */
     protected function printHeader(Game $game)
     {
-        $width = $game->size()->width();
+        $width = $game->configuration()->size()->width();
 
         foreach (range(1, $width) as $column) {
             echo '| ' . $column . ' ' . ($column == $width ? '|' : '');
@@ -52,7 +52,7 @@ class GameView
     protected function printFields(Game $game)
     {
         $fields = $game->fields();
-        $width = $game->size()->width();
+        $width = $game->configuration()->size()->width();
 
         foreach ($fields as $i => $field) {
             echo '| ' . $this->fieldToString($field) . ' ';

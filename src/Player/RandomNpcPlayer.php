@@ -36,7 +36,7 @@ class RandomNpcPlayer
         do {
             $error = false;
             try {
-                $column = rand(1, $this->game->size()->width());
+                $column = rand(1, $this->game->configuration()->size()->width());
                 $this->game->dropStone($stone, $column);
             } catch (ColumnAlreadyFilledException $e) {
                 $error = true;

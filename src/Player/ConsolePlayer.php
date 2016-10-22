@@ -31,7 +31,7 @@ class ConsolePlayer
             $error = false;
             do {
                 $column = trim(readline(PHP_EOL . 'Choose your column [1 - 7]: '));
-            } while (!in_array($column, range(1, $this->game->size()->width())));
+            } while (!in_array($column, range(1, $this->game->configuration()->size()->width())));
             try {
                 $this->game->dropStone($stone, $column);
             } catch (ColumnAlreadyFilledException $e) {
