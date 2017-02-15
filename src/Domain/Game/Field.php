@@ -2,7 +2,7 @@
 
 namespace Marein\ConnectFour\Domain\Game;
 
-class Field
+final class Field
 {
     /**
      * @var Point
@@ -18,11 +18,12 @@ class Field
      * Field constructor.
      *
      * @param Point $point
+     * @param Stone $stone
      */
-    private function __construct(Point $point)
+    private function __construct(Point $point, Stone $stone = null)
     {
         $this->point = $point;
-        $this->stone = null;
+        $this->stone = $stone;
     }
 
     /**
@@ -32,19 +33,21 @@ class Field
      *
      * @return Field
      */
-    public static function createEmpty(Point $point)
+    public static function empty(Point $point)
     {
-        return new static($point);
+        return new self($point);
     }
 
     /**
-     * Place a [Stone] in the [Field].
+     * Place a [Stone].
      *
      * @param Stone $stone
+     *
+     * @return Field
      */
     public function placeStone(Stone $stone)
     {
-        $this->stone = $stone;
+        return new self($this->point(), $stone);
     }
 
     /**

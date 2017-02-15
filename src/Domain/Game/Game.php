@@ -10,11 +10,6 @@ use Marein\ConnectFour\Domain\Game\Exception\OutOfSizeException;
 class Game
 {
     /**
-     * @var Field[]
-     */
-    private $fields;
-
-    /**
      * @var Configuration
      */
     private $configuration;
@@ -35,6 +30,11 @@ class Game
     private $winningStone;
 
     /**
+     * @var Board
+     */
+    private $board;
+
+    /**
      * Game constructor.
      *
      * @param Configuration $configuration
@@ -45,13 +45,7 @@ class Game
         $this->lastUsedStone = null;
         $this->dropCounter = 0;
         $this->winningStone = null;
-        $this->fields = [];
-
-        for ($y = 0; $y < $configuration->size()->height(); $y++) {
-            for ($x = 0; $x < $configuration->size()->width(); $x++) {
-                $this->fields[] = Field::createEmpty(new Point($x + 1, $y + 1));
-            }
-        }
+        $this->board = Board::empty($configuration);
     }
 
     /*************************************************************
@@ -67,7 +61,7 @@ class Game
      */
     public static function open(Configuration $configuration)
     {
-        return new static($configuration);
+        return new self($configuration);
     }
 
     /*************************************************************
@@ -75,7 +69,7 @@ class Game
      *************************************************************/
 
     /**
-     * Drops a [Stone] in a specified column.
+     * Drops a [Stone] in the given column.
      *
      * @param Stone $stone
      * @param int   $column
@@ -91,15 +85,16 @@ class Game
         $this->guardColumnFitsInSize($column);
         $this->guardNextStoneExpected($stone);
 
-        $field = $this->findFirstEmptyFieldInColumn($column);
-
-        $field->placeStone($stone);
+        $this->board = $this->board->dropStone($stone, $column);
 
         $this->lastUsedStone = $stone;
 
         $this->dropCounter++;
 
-        $this->calculateWinningStone($field->stone(), $field->point());
+        $this->calculateWinningStone(
+            $this->board->lastUsedField()->stone(),
+            $this->board->lastUsedField()->point()
+        );
     }
 
     /*************************************************************
@@ -116,22 +111,22 @@ class Game
     {
         $column = $this->checkFieldsForWin(
             $stone,
-            $this->findFieldsByColumn($point->x())
+            $this->board->findFieldsByColumn($point->x())
         );
 
         $row = $this->checkFieldsForWin(
             $stone,
-            $this->findFieldsByRow($point->y())
+            $this->board->findFieldsByRow($point->y())
         );
 
         $diagonalDown = $this->checkFieldsForWin(
             $stone,
-            $this->findFieldsByPoints(Point::createPointsInDiagonalDown($point, $this->configuration()->size()))
+            $this->board->findFieldsByPoints(Point::createPointsInDiagonalDown($point, $this->configuration()->size()))
         );
 
         $diagonalUp = $this->checkFieldsForWin(
             $stone,
-            $this->findFieldsByPoints(Point::createPointsInDiagonalUp($point, $this->configuration()->size()))
+            $this->board->findFieldsByPoints(Point::createPointsInDiagonalUp($point, $this->configuration()->size()))
         );
 
         if ($column || $row || $diagonalDown || $diagonalUp) {
@@ -150,9 +145,9 @@ class Game
     private function checkFieldsForWin(Stone $stone, array $fields)
     {
         return strpos(
-            implode($fields),
-            str_repeat($stone->color(), $this->configuration->requiredMatches()->value())
-        ) !== false;
+                implode($fields),
+                str_repeat($stone->color(), $this->configuration->requiredMatches()->value())
+            ) !== false;
     }
 
     /*************************************************************
@@ -200,72 +195,6 @@ class Game
     }
 
     /*************************************************************
-     *                     Finder for [Field]
-     *************************************************************/
-
-    /**
-     * Find first empty field [Field] in column.
-     *
-     * @param int $column
-     *
-     * @return Field
-     * @throws ColumnAlreadyFilledException
-     */
-    private function findFirstEmptyFieldInColumn($column)
-    {
-        /** @var Field $field */
-        foreach (array_reverse($this->findFieldsByColumn($column)) as $field) {
-            if ($field->isEmpty()) {
-                return $field;
-            }
-        }
-
-        throw new ColumnAlreadyFilledException();
-    }
-
-    /**
-     * Find [Field]s by column.
-     *
-     * @param int $column
-     *
-     * @return Field[]
-     */
-    private function findFieldsByColumn($column)
-    {
-        return array_filter($this->fields, function (Field $field) use ($column) {
-            return $field->point()->x() == $column;
-        });
-    }
-
-    /**
-     * Find [Field]s by row.
-     *
-     * @param int $row
-     *
-     * @return Field[]
-     */
-    private function findFieldsByRow($row)
-    {
-        return array_filter($this->fields, function (Field $field) use ($row) {
-            return $field->point()->y() == $row;
-        });
-    }
-
-    /**
-     * Find [Field]s by [Point]s.
-     *
-     * @param Point[] $points
-     *
-     * @return Field[]
-     */
-    private function findFieldsByPoints(array $points)
-    {
-        return array_filter($this->fields, function (Field $field) use ($points) {
-            return in_array($field->point(), $points);
-        });
-    }
-
-    /*************************************************************
      *                          Getter
      *************************************************************/
 
@@ -276,13 +205,7 @@ class Game
      */
     public function fields()
     {
-        // May Field is just a Value Object? Currently, it's modelled as an Entity.
-        // That's why, we return new Field[] to avoid calls like
-        // "$game->fields()[20]->placeStone(Stone::pickupRed());"
-        // which breaks invariants.
-        return array_map(function ($field) {
-            return clone $field;
-        }, $this->fields);
+        return $this->board->fields();
     }
 
     /**

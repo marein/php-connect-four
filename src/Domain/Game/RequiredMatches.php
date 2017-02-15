@@ -4,7 +4,7 @@ namespace Marein\ConnectFour\Domain\Game;
 
 use Marein\ConnectFour\Domain\Game\Exception\InvalidRequiredMatchesException;
 
-class RequiredMatches
+final class RequiredMatches
 {
     const MINIMUM = 4;
 
@@ -24,8 +24,8 @@ class RequiredMatches
     {
         $this->value = $value;
 
-        if ($value < static::MINIMUM) {
-            throw new InvalidRequiredMatchesException('The value must be at least ' . static::MINIMUM . '.');
+        if ($value < self::MINIMUM) {
+            throw new InvalidRequiredMatchesException('The value must be at least ' . self::MINIMUM . '.');
         }
     }
 

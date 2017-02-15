@@ -4,7 +4,7 @@ namespace Marein\ConnectFour\Domain\Game;
 
 use Marein\ConnectFour\Domain\Game\Exception\GameNotWinnableException;
 
-class Configuration
+final class Configuration
 {
 
     /**
@@ -42,7 +42,7 @@ class Configuration
      */
     public static function common()
     {
-        return new static(
+        return new self(
             new Size(7, 6),
             new RequiredMatches(4)
         );
@@ -58,7 +58,7 @@ class Configuration
      */
     public static function custom(Size $size, RequiredMatches $requiredMatches)
     {
-        return new static($size, $requiredMatches);
+        return new self($size, $requiredMatches);
     }
 
     /*************************************************************

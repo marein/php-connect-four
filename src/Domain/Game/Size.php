@@ -4,7 +4,7 @@ namespace Marein\ConnectFour\Domain\Game;
 
 use Marein\ConnectFour\Domain\Game\Exception\InvalidSizeException;
 
-class Size
+final class Size
 {
     /**
      * @var int

@@ -2,7 +2,7 @@
 
 namespace Marein\ConnectFour\Domain\Game;
 
-class Point
+final class Point
 {
     /**
      * @var int
@@ -61,11 +61,11 @@ class Point
         $points = [];
 
         for ($x = $fromPoint->x(), $y = $fromPoint->y(); $x > 0 && $y <= $withinSize->height(); $x--, $y++) {
-            array_unshift($points, new static($x, $y));
+            array_unshift($points, new self($x, $y));
         }
 
         for ($x = $fromPoint->x(), $y = $fromPoint->y(); $x <= $withinSize->width() && $y > 0; $x++, $y--) {
-            array_push($points, new static($x, $y));
+            array_push($points, new self($x, $y));
         }
 
         return array_unique($points, SORT_REGULAR);
@@ -86,11 +86,11 @@ class Point
         $points = [];
 
         for ($x = $fromPoint->x(), $y = $fromPoint->y(); $x > 0 && $y > 0; $x--, $y--) {
-            array_unshift($points, new static($x, $y));
+            array_unshift($points, new self($x, $y));
         }
 
         for ($x = $fromPoint->x(), $y = $fromPoint->y(); $x <= $withinSize->width() && $y <= $withinSize->height(); $x++, $y++) {
-            array_push($points, new static($x, $y));
+            array_push($points, new self($x, $y));
         }
 
         return array_unique($points, SORT_REGULAR);

@@ -2,7 +2,7 @@
 
 namespace Marein\ConnectFour\Domain\Game;
 
-class Stone
+final class Stone
 {
     const RED = 1;
     const YELLOW = 2;
@@ -29,7 +29,7 @@ class Stone
      */
     public static function pickUpYellow()
     {
-        return new static(static::YELLOW);
+        return new self(self::YELLOW);
     }
 
     /**
@@ -39,7 +39,7 @@ class Stone
      */
     public static function pickUpRed()
     {
-        return new static(static::RED);
+        return new self(self::RED);
     }
 
     /**
