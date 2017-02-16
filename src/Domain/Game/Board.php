@@ -33,7 +33,7 @@ final class Board
      *************************************************************/
 
     /**
-     * Create an empty [Field].
+     * Create an empty [Board].
      *
      * @param Configuration $configuration
      *
