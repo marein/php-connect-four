@@ -3,6 +3,7 @@
 namespace Marein\ConnectFour\Domain\Game;
 
 use Marein\ConnectFour\Domain\Game\Exception\GameNotWinnableException;
+use Marein\ConnectFour\Domain\Game\WinningStrategy\CommonWinningStrategy;
 
 class ConfigurationTest extends \PHPUnit_Framework_TestCase
 {
@@ -16,6 +17,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(4, $configuration->requiredMatches()->value());
         $this->assertEquals(7, $configuration->size()->width());
         $this->assertEquals(6, $configuration->size()->height());
+        $this->assertInstanceOf(CommonWinningStrategy::class, $configuration->winningStrategy());
     }
 
     /**
@@ -23,11 +25,16 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldBeCreatedWithCustomConfiguration()
     {
-        $configuration = Configuration::custom(new Size(7, 6), new RequiredMatches(4));
+        $configuration = Configuration::custom(
+            new Size(7, 6),
+            new RequiredMatches(4),
+            new CommonWinningStrategy()
+        );
 
         $this->assertEquals(4, $configuration->requiredMatches()->value());
         $this->assertEquals(7, $configuration->size()->width());
         $this->assertEquals(6, $configuration->size()->height());
+        $this->assertInstanceOf(CommonWinningStrategy::class, $configuration->winningStrategy());
     }
 
     /**
@@ -41,7 +48,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectException(GameNotWinnableException::class);
 
-        Configuration::custom($size, $requiredMatches);
+        Configuration::custom($size, $requiredMatches, new CommonWinningStrategy());
     }
 
     /**

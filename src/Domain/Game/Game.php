@@ -99,12 +99,14 @@ class Game
 
         $this->board = $this->board->dropStone($this->currentPlayer()->stone(), $column);
 
-        $this->calculateWinner(
-            $this->currentPlayer(),
-            $this->board->lastUsedField()->point()
-        );
+        $isWin = $this->configuration()->winningStrategy()->calculate($this->configuration, $this->board);
+
+        if ($isWin) {
+            $this->winner = $this->currentPlayer();
+        }
 
         $this->numberOfMoves++;
+
         $this->switchPlayer();
     }
 
@@ -114,64 +116,6 @@ class Game
     private function switchPlayer()
     {
         $this->players = array_reverse($this->players);
-    }
-
-    /*************************************************************
-     *                    Winner calculation
-     *************************************************************/
-
-    /**
-     * Returns true if the given [Player] has a match.
-     *
-     * @todo This class should not be responsible to do this.
-     *       Make interface WinningStrategy with following concrete implementations:
-     *       DiagonalWinningStrategy, VerticalWinningStrategy, HorizontalWinningStrategy, AllWinningStrategy.
-     *       The WinningStrategy can be set via [Configuration].
-     *
-     * @param Player $player
-     * @param Point  $point
-     */
-    private function calculateWinner(Player $player, Point $point)
-    {
-        $column = $this->checkFieldsForWin(
-            $player->stone(),
-            $this->board->findFieldsByColumn($point->x())
-        );
-
-        $row = $this->checkFieldsForWin(
-            $player->stone(),
-            $this->board->findFieldsByRow($point->y())
-        );
-
-        $diagonalDown = $this->checkFieldsForWin(
-            $player->stone(),
-            $this->board->findFieldsByPoints(Point::createPointsInDiagonalDown($point, $this->configuration()->size()))
-        );
-
-        $diagonalUp = $this->checkFieldsForWin(
-            $player->stone(),
-            $this->board->findFieldsByPoints(Point::createPointsInDiagonalUp($point, $this->configuration()->size()))
-        );
-
-        if ($column || $row || $diagonalDown || $diagonalUp) {
-            $this->winner = $player;
-        }
-    }
-
-    /**
-     * Check if the given [Field]s have a match.
-     *
-     * @param Stone   $stone
-     * @param Field[] $fields
-     *
-     * @return bool
-     */
-    private function checkFieldsForWin(Stone $stone, array $fields)
-    {
-        return strpos(
-                implode($fields),
-                str_repeat($stone->color(), $this->configuration->requiredMatches()->value())
-            ) !== false;
     }
 
     /*************************************************************

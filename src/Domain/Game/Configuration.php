@@ -3,10 +3,11 @@
 namespace Marein\ConnectFour\Domain\Game;
 
 use Marein\ConnectFour\Domain\Game\Exception\GameNotWinnableException;
+use Marein\ConnectFour\Domain\Game\WinningStrategy\CommonWinningStrategy;
+use Marein\ConnectFour\Domain\Game\WinningStrategy\WinningStrategy;
 
 final class Configuration
 {
-
     /**
      * @var Size
      */
@@ -18,15 +19,22 @@ final class Configuration
     private $requiredMatches;
 
     /**
+     * @var WinningStrategy
+     */
+    private $winningStrategy;
+
+    /**
      * Configuration constructor.
      *
      * @param Size            $size
      * @param RequiredMatches $requiredMatches
+     * @param WinningStrategy $winningStrategy
      */
-    private function __construct(Size $size, RequiredMatches $requiredMatches)
+    private function __construct(Size $size, RequiredMatches $requiredMatches, WinningStrategy $winningStrategy)
     {
         $this->size = $size;
         $this->requiredMatches = $requiredMatches;
+        $this->winningStrategy = $winningStrategy;
 
         $this->guardGameIsWinnable();
     }
@@ -44,7 +52,8 @@ final class Configuration
     {
         return new self(
             new Size(7, 6),
-            new RequiredMatches(4)
+            new RequiredMatches(4),
+            new CommonWinningStrategy()
         );
     }
 
@@ -53,12 +62,13 @@ final class Configuration
      *
      * @param Size            $size
      * @param RequiredMatches $requiredMatches
+     * @param WinningStrategy $winningStrategy
      *
      * @return Configuration
      */
-    public static function custom(Size $size, RequiredMatches $requiredMatches)
+    public static function custom(Size $size, RequiredMatches $requiredMatches, WinningStrategy $winningStrategy)
     {
-        return new self($size, $requiredMatches);
+        return new self($size, $requiredMatches, $winningStrategy);
     }
 
     /*************************************************************
@@ -84,6 +94,16 @@ final class Configuration
      *************************************************************/
 
     /**
+     * Returns the [Size].
+     *
+     * @return Size
+     */
+    public function size()
+    {
+        return $this->size;
+    }
+
+    /**
      * Returns the [RequiredMatches].
      *
      * @return RequiredMatches
@@ -94,12 +114,12 @@ final class Configuration
     }
 
     /**
-     * Returns the [Size].
+     * Returns the [WinningStrategy].
      *
-     * @return Size
+     * @return WinningStrategy
      */
-    public function size()
+    public function winningStrategy()
     {
-        return $this->size;
+        return $this->winningStrategy;
     }
 }

@@ -8,6 +8,7 @@ use Marein\ConnectFour\Domain\Game\Exception\PlayersHaveSameStoneException;
 use Marein\ConnectFour\Domain\Game\Exception\PlayersNotUniqueException;
 use Marein\ConnectFour\Domain\Game\Exception\UnexpectedPlayerException;
 use Marein\ConnectFour\Domain\Game\Exception\OutOfSizeException;
+use Marein\ConnectFour\Domain\Game\WinningStrategy\CommonWinningStrategy;
 
 class GameTest extends \PHPUnit_Framework_TestCase
 {
@@ -61,85 +62,22 @@ class GameTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @dataProvider winWhenMatchProvider
-     *
-     * @param array $moves
      */
-    public function itShouldBeWinWhenMatchIsFound(array $moves)
+    public function itShouldBeWinWhenMatchIsFound()
     {
         $game = $this->createCommonGame();
 
-        foreach ($moves as $move) {
-            $game->move($move[0], $move[1]);
-        }
+        $game->move(self::PLAYER1, 1);
+        $game->move(self::PLAYER2, 1);
+        $game->move(self::PLAYER1, 2);
+        $game->move(self::PLAYER2, 2);
+        $game->move(self::PLAYER1, 3);
+        $game->move(self::PLAYER2, 3);
+        $game->move(self::PLAYER1, 4);
 
+        $this->assertEquals(self::PLAYER1, $game->winner()->id());
         $this->assertFalse($game->isDraw());
         $this->assertTrue($game->isWin());
-    }
-
-    /**
-     * @return array
-     */
-    public function winWhenMatchProvider()
-    {
-        return [
-            // Match in column
-            [
-                [
-                    [self::PLAYER1, 1],
-                    [self::PLAYER2, 2],
-                    [self::PLAYER1, 1],
-                    [self::PLAYER2, 2],
-                    [self::PLAYER1, 1],
-                    [self::PLAYER2, 2],
-                    [self::PLAYER1, 1]
-                ]
-            ],
-            // Match in row
-            [
-                [
-                    [self::PLAYER1, 1],
-                    [self::PLAYER2, 1],
-                    [self::PLAYER1, 2],
-                    [self::PLAYER2, 2],
-                    [self::PLAYER1, 3],
-                    [self::PLAYER2, 3],
-                    [self::PLAYER1, 4]
-                ]
-            ],
-            // Match in diagonal down
-            [
-                [
-                    [self::PLAYER1, 7],
-                    [self::PLAYER2, 6],
-                    [self::PLAYER1, 6],
-                    [self::PLAYER2, 5],
-                    [self::PLAYER1, 4],
-                    [self::PLAYER2, 5],
-                    [self::PLAYER1, 5],
-                    [self::PLAYER2, 4],
-                    [self::PLAYER1, 4],
-                    [self::PLAYER2, 1],
-                    [self::PLAYER1, 4]
-                ]
-            ],
-            // Match in diagonal up
-            [
-                [
-                    [self::PLAYER1, 1],
-                    [self::PLAYER2, 2],
-                    [self::PLAYER1, 2],
-                    [self::PLAYER2, 3],
-                    [self::PLAYER1, 3],
-                    [self::PLAYER2, 4],
-                    [self::PLAYER1, 3],
-                    [self::PLAYER2, 4],
-                    [self::PLAYER1, 4],
-                    [self::PLAYER2, 6],
-                    [self::PLAYER1, 4]
-                ]
-            ]
-        ];
     }
 
     /**
@@ -166,6 +104,7 @@ class GameTest extends \PHPUnit_Framework_TestCase
         $game->move(self::PLAYER1, 4);
         $game->move(self::PLAYER2, 1);
 
+        $this->assertEquals(self::PLAYER2, $game->winner()->id());
         $this->assertFalse($game->isDraw());
         $this->assertTrue($game->isWin());
     }
@@ -284,7 +223,8 @@ class GameTest extends \PHPUnit_Framework_TestCase
         return Game::open(
             Configuration::custom(
                 new Size(2, 4),
-                new RequiredMatches(4)
+                new RequiredMatches(4),
+                new CommonWinningStrategy()
             ),
             new Player(self::PLAYER1, Stone::red()),
             new Player(self::PLAYER2, Stone::yellow())
@@ -299,7 +239,8 @@ class GameTest extends \PHPUnit_Framework_TestCase
         return Game::open(
             Configuration::custom(
                 new Size(4, 2),
-                new RequiredMatches(4)
+                new RequiredMatches(4),
+                new CommonWinningStrategy()
             ),
             new Player(self::PLAYER1, Stone::red()),
             new Player(self::PLAYER2, Stone::yellow())
@@ -314,7 +255,8 @@ class GameTest extends \PHPUnit_Framework_TestCase
         return Game::open(
             Configuration::custom(
                 new Size(4, 4),
-                new RequiredMatches(4)
+                new RequiredMatches(4),
+                new CommonWinningStrategy()
             ),
             new Player(self::PLAYER1, Stone::red()),
             new Player(self::PLAYER2, Stone::yellow())
