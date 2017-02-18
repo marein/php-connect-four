@@ -9,7 +9,7 @@ class StoneTest extends \PHPUnit_Framework_TestCase
      */
     public function aRedStoneCanBeCreated()
     {
-        $this->assertEquals(Stone::pickUpRed()->color(), Stone::RED);
+        $this->assertEquals(Stone::red()->color(), Stone::RED);
     }
 
     /**
@@ -17,6 +17,6 @@ class StoneTest extends \PHPUnit_Framework_TestCase
      */
     public function aYellowStoneCanBeCreated()
     {
-        $this->assertEquals(Stone::pickUpYellow()->color(), Stone::YELLOW);
+        $this->assertEquals(Stone::yellow()->color(), Stone::YELLOW);
     }
 }

@@ -18,8 +18,8 @@ namespace {
 
     $game = Game::open(
         Configuration::common(),
-        new Player($player1Id, Stone::pickUpRed()),
-        new Player($player2Id, Stone::pickUpYellow())
+        new Player($player1Id, Stone::red()),
+        new Player($player2Id, Stone::yellow())
     );
     $view = new GameView();
 

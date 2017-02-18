@@ -22,9 +22,9 @@ class FieldTest extends \PHPUnit_Framework_TestCase
     {
         $field = Field::empty(new Point(0, 1));
 
-        $field = $field->placeStone(Stone::pickUpRed());
+        $field = $field->placeStone(Stone::red());
 
         $this->assertFalse($field->isEmpty());
-        $this->assertEquals(Stone::pickUpRed(), $field->stone());
+        $this->assertEquals(Stone::red(), $field->stone());
     }
 }

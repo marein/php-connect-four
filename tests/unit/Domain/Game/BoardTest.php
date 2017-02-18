@@ -20,7 +20,7 @@ class BoardTest extends \PHPUnit_Framework_TestCase
 
         $hashOfOriginalBoardBeforeChanges = $this->createBoardHash($board);
 
-        $changedBoard = $board->dropStone(Stone::pickUpRed(), 1);
+        $changedBoard = $board->dropStone(Stone::red(), 1);
 
         $hashOfOriginalBoardAfterChanges = $this->createBoardHash($board);
 

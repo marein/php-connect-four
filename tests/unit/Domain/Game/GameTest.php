@@ -192,8 +192,8 @@ class GameTest extends \PHPUnit_Framework_TestCase
 
         Game::open(
             Configuration::common(),
-            new Player(self::PLAYER1, Stone::pickUpRed()),
-            new Player(self::PLAYER1, Stone::pickUpYellow())
+            new Player(self::PLAYER1, Stone::red()),
+            new Player(self::PLAYER1, Stone::yellow())
         );
     }
 
@@ -206,8 +206,8 @@ class GameTest extends \PHPUnit_Framework_TestCase
 
         Game::open(
             Configuration::common(),
-            new Player(self::PLAYER1, Stone::pickUpRed()),
-            new Player(self::PLAYER2, Stone::pickUpRed())
+            new Player(self::PLAYER1, Stone::red()),
+            new Player(self::PLAYER2, Stone::red())
         );
     }
 
@@ -286,8 +286,8 @@ class GameTest extends \PHPUnit_Framework_TestCase
                 new Size(2, 4),
                 new RequiredMatches(4)
             ),
-            new Player(self::PLAYER1, Stone::pickUpRed()),
-            new Player(self::PLAYER2, Stone::pickUpYellow())
+            new Player(self::PLAYER1, Stone::red()),
+            new Player(self::PLAYER2, Stone::yellow())
         );
     }
 
@@ -301,8 +301,8 @@ class GameTest extends \PHPUnit_Framework_TestCase
                 new Size(4, 2),
                 new RequiredMatches(4)
             ),
-            new Player(self::PLAYER1, Stone::pickUpRed()),
-            new Player(self::PLAYER2, Stone::pickUpYellow())
+            new Player(self::PLAYER1, Stone::red()),
+            new Player(self::PLAYER2, Stone::yellow())
         );
     }
 
@@ -316,8 +316,8 @@ class GameTest extends \PHPUnit_Framework_TestCase
                 new Size(4, 4),
                 new RequiredMatches(4)
             ),
-            new Player(self::PLAYER1, Stone::pickUpRed()),
-            new Player(self::PLAYER2, Stone::pickUpYellow())
+            new Player(self::PLAYER1, Stone::red()),
+            new Player(self::PLAYER2, Stone::yellow())
         );
     }
 
@@ -328,8 +328,8 @@ class GameTest extends \PHPUnit_Framework_TestCase
     {
         return Game::open(
             Configuration::common(),
-            new Player(self::PLAYER1, Stone::pickUpRed()),
-            new Player(self::PLAYER2, Stone::pickUpYellow())
+            new Player(self::PLAYER1, Stone::red()),
+            new Player(self::PLAYER2, Stone::yellow())
         );
     }
 }

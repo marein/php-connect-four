@@ -2,6 +2,9 @@
 
 namespace Marein\ConnectFour\Domain\Game;
 
+/**
+ * This class fakes the missing enumeration feature.
+ */
 final class Stone
 {
     const RED = 1;
@@ -27,7 +30,7 @@ final class Stone
      *
      * @return Stone
      */
-    public static function pickUpYellow()
+    public static function yellow()
     {
         return new self(self::YELLOW);
     }
@@ -37,7 +40,7 @@ final class Stone
      *
      * @return Stone
      */
-    public static function pickUpRed()
+    public static function red()
     {
         return new self(self::RED);
     }
