@@ -4,6 +4,7 @@
 namespace {
 
     use Marein\ConnectFour\Domain\Game\Configuration;
+    use Marein\ConnectFour\Domain\Game\Player;
     use Marein\ConnectFour\Player\ConsolePlayer;
     use Marein\ConnectFour\View\GameView;
     use Marein\ConnectFour\Domain\Game\Game;
@@ -12,33 +13,40 @@ namespace {
 
     require_once __DIR__ . '/../vendor/autoload.php';
 
-    $game = Game::open(Configuration::common());
+    $player1Id = uniqid();
+    $player2Id = uniqid();
+
+    $game = Game::open(
+        Configuration::common(),
+        new Player($player1Id, Stone::pickUpRed()),
+        new Player($player2Id, Stone::pickUpYellow())
+    );
     $view = new GameView();
 
-    $player1 = new ConsolePlayer($game);
-//    $player1 = new RandomNpcPlayer($game, 0.1);
-    $player2 = new RandomNpcPlayer($game, 0.5);
+    $player1 = new ConsolePlayer($player1Id, $game);
+//    $player1 = new RandomNpcPlayer($player1Id, $game, 0.1);
+    $player2 = new RandomNpcPlayer($player2Id, $game, 0.5);
 
     $view->render($game);
 
     while (!$game->isDraw() && !$game->isWin()) {
 
-        $player1->play(Stone::pickUpRed());
+        $player1->play();
         $view->render($game);
 
         if ($game->isWin()) {
             break;
         }
 
-        $player2->play(Stone::pickUpYellow());
+        $player2->play();
         $view->render($game);
     }
 
     if ($game->isDraw()) {
         echo 'Draw.';
-    } else if ($game->winningStone() == Stone::pickUpRed()) {
+    } else if ($game->winner()->id() == $player1Id) {
         echo 'Player 1 win.';
-    } else if ($game->winningStone() == Stone::pickUpYellow()) {
+    } else if ($game->winner()->id() == $player2Id) {
         echo 'Player 2 win';
     }
 

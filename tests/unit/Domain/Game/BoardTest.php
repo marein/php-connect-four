@@ -6,6 +6,8 @@ class BoardTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * All the tests of the class game should cover these tests. So check for immutability.
+     *
+     * @todo Move tests for [Board] from GameTest.php to BoardTest.php
      */
 
     /**

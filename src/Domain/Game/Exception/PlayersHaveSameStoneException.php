@@ -2,7 +2,7 @@
 
 namespace Marein\ConnectFour\Domain\Game\Exception;
 
-class NextStoneExpectedException extends \Exception
+class PlayersHaveSameStoneException extends \Exception
 {
 
 }

@@ -4,8 +4,10 @@ namespace Marein\ConnectFour\Domain\Game;
 
 use Marein\ConnectFour\Domain\Game\Exception\ColumnAlreadyFilledException;
 use Marein\ConnectFour\Domain\Game\Exception\GameFinishedException;
-use Marein\ConnectFour\Domain\Game\Exception\NextStoneExpectedException;
 use Marein\ConnectFour\Domain\Game\Exception\OutOfSizeException;
+use Marein\ConnectFour\Domain\Game\Exception\PlayersHaveSameStoneException;
+use Marein\ConnectFour\Domain\Game\Exception\PlayersNotUniqueException;
+use Marein\ConnectFour\Domain\Game\Exception\UnexpectedPlayerException;
 
 class Game
 {
@@ -15,19 +17,9 @@ class Game
     private $configuration;
 
     /**
-     * @var Stone
-     */
-    private $lastUsedStone;
-
-    /**
      * @var int
      */
-    private $dropCounter;
-
-    /**
-     * @var Stone
-     */
-    private $winningStone;
+    private $numberOfMoves;
 
     /**
      * @var Board
@@ -35,17 +27,35 @@ class Game
     private $board;
 
     /**
+     * @var Player[]
+     */
+    private $players;
+
+    /**
+     * @var Player
+     */
+    private $winner;
+
+    /**
      * Game constructor.
      *
      * @param Configuration $configuration
+     * @param Player        $player1
+     * @param Player        $player2
+     *
+     * @throws PlayersNotUniqueException
+     * @throws PlayersHaveSameStoneException
      */
-    private function __construct(Configuration $configuration)
+    private function __construct(Configuration $configuration, Player $player1, Player $player2)
     {
+        $this->guardPlayersAreUnique($player1, $player2);
+        $this->guardPlayersHaveDifferentStones($player1, $player2);
+
         $this->configuration = $configuration;
-        $this->lastUsedStone = null;
-        $this->dropCounter = 0;
-        $this->winningStone = null;
+        $this->numberOfMoves = 0;
         $this->board = Board::empty($configuration);
+        $this->players = [$player1, $player2];
+        $this->winner = null;
     }
 
     /*************************************************************
@@ -56,12 +66,14 @@ class Game
      * Opens a new [Game].
      *
      * @param Configuration $configuration
+     * @param Player        $player1
+     * @param Player        $player2
      *
      * @return Game
      */
-    public static function open(Configuration $configuration)
+    public static function open(Configuration $configuration, Player $player1, Player $player2)
     {
-        return new self($configuration);
+        return new self($configuration, $player1, $player2);
     }
 
     /*************************************************************
@@ -69,68 +81,80 @@ class Game
      *************************************************************/
 
     /**
-     * Drops a [Stone] in the given column.
+     * The given player makes the move in the given column.
      *
-     * @param Stone $stone
-     * @param int   $column
+     * @param string $playerId
+     * @param int    $column
      *
      * @throws ColumnAlreadyFilledException
      * @throws GameFinishedException
-     * @throws NextStoneExpectedException
+     * @throws UnexpectedPlayerException
      * @throws OutOfSizeException
      */
-    public function dropStone(Stone $stone, $column)
+    public function move($playerId, $column)
     {
         $this->guardGameFinished();
         $this->guardColumnFitsInSize($column);
-        $this->guardNextStoneExpected($stone);
+        $this->guardExpectedPlayer($playerId);
 
-        $this->board = $this->board->dropStone($stone, $column);
+        $this->board = $this->board->dropStone($this->currentPlayer()->stone(), $column);
 
-        $this->lastUsedStone = $stone;
-
-        $this->dropCounter++;
-
-        $this->calculateWinningStone(
-            $this->board->lastUsedField()->stone(),
+        $this->calculateWinner(
+            $this->currentPlayer(),
             $this->board->lastUsedField()->point()
         );
+
+        $this->numberOfMoves++;
+        $this->switchPlayer();
+    }
+
+    /**
+     * Switch the [Player]s.
+     */
+    private function switchPlayer()
+    {
+        $this->players = array_reverse($this->players);
     }
 
     /*************************************************************
-     *                      Winning calculation
+     *                    Winner calculation
      *************************************************************/
 
     /**
-     * Returns true if the given [Stone] has a match.
+     * Returns true if the given [Player] has a match.
      *
-     * @param Stone $stone
-     * @param Point $point
+     * @todo This class should not be responsible to do this.
+     *       Make interface WinningStrategy with following concrete implementations:
+     *       DiagonalWinningStrategy, VerticalWinningStrategy, HorizontalWinningStrategy, AllWinningStrategy.
+     *       The WinningStrategy can be set via [Configuration].
+     *
+     * @param Player $player
+     * @param Point  $point
      */
-    private function calculateWinningStone(Stone $stone, Point $point)
+    private function calculateWinner(Player $player, Point $point)
     {
         $column = $this->checkFieldsForWin(
-            $stone,
+            $player->stone(),
             $this->board->findFieldsByColumn($point->x())
         );
 
         $row = $this->checkFieldsForWin(
-            $stone,
+            $player->stone(),
             $this->board->findFieldsByRow($point->y())
         );
 
         $diagonalDown = $this->checkFieldsForWin(
-            $stone,
+            $player->stone(),
             $this->board->findFieldsByPoints(Point::createPointsInDiagonalDown($point, $this->configuration()->size()))
         );
 
         $diagonalUp = $this->checkFieldsForWin(
-            $stone,
+            $player->stone(),
             $this->board->findFieldsByPoints(Point::createPointsInDiagonalUp($point, $this->configuration()->size()))
         );
 
         if ($column || $row || $diagonalDown || $diagonalUp) {
-            $this->winningStone = $stone;
+            $this->winner = $player;
         }
     }
 
@@ -155,16 +179,46 @@ class Game
      *************************************************************/
 
     /**
-     * Guard if the given [Stone] is not the expected one.
+     * Guard if the [Player]s are unique.
      *
-     * @param Stone $stone
+     * @param Player $player1
+     * @param Player $player2
      *
-     * @throws NextStoneExpectedException
+     * @throws PlayersNotUniqueException
      */
-    private function guardNextStoneExpected(Stone $stone)
+    private function guardPlayersAreUnique(Player $player1, Player $player2)
     {
-        if ($this->lastUsedStone == $stone) {
-            throw new NextStoneExpectedException();
+        if ($player1->id() == $player2->id()) {
+            throw new PlayersNotUniqueException();
+        }
+    }
+
+    /**
+     * Guard if the [Player]s have different stones.
+     *
+     * @param Player $player1
+     * @param Player $player2
+     *
+     * @throws PlayersHaveSameStoneException
+     */
+    private function guardPlayersHaveDifferentStones(Player $player1, Player $player2)
+    {
+        if ($player1->stone() == $player2->stone()) {
+            throw new PlayersHaveSameStoneException();
+        }
+    }
+
+    /**
+     * Guard if the given player id is the expected one.
+     *
+     * @param string $playerId
+     *
+     * @throws UnexpectedPlayerException
+     */
+    private function guardExpectedPlayer(string $playerId)
+    {
+        if ($this->currentPlayer()->id() !== $playerId) {
+            throw new UnexpectedPlayerException();
         }
     }
 
@@ -199,6 +253,16 @@ class Game
      *************************************************************/
 
     /**
+     * Returns the [Player].
+     *
+     * @return Player
+     */
+    private function currentPlayer()
+    {
+        return $this->players[0];
+    }
+
+    /**
      * Returns the [Field]s of the [Game].
      *
      * @return Field[]
@@ -219,13 +283,13 @@ class Game
     }
 
     /**
-     * Returns the winning [Stone] if a match was found during the last drop.
+     * Returns the winner if a match was found during the last move.
      *
-     * @return Stone|null
+     * @return Player|null
      */
-    public function winningStone()
+    public function winner()
     {
-        return $this->winningStone;
+        return $this->winner;
     }
 
     /**
@@ -236,8 +300,8 @@ class Game
     public function isDraw()
     {
         return
-            !$this->winningStone &&
-            $this->dropCounter == $this->configuration()->size()->width() * $this->configuration()->size()->height();
+            !$this->winner &&
+            $this->numberOfMoves == $this->configuration()->size()->width() * $this->configuration()->size()->height();
     }
 
     /**
@@ -247,6 +311,6 @@ class Game
      */
     public function isWin()
     {
-        return $this->winningStone !== null;
+        return $this->winner !== null;
     }
 }

@@ -4,21 +4,22 @@ namespace Marein\ConnectFour\Domain\Game;
 
 use Marein\ConnectFour\Domain\Game\Exception\ColumnAlreadyFilledException;
 use Marein\ConnectFour\Domain\Game\Exception\GameFinishedException;
-use Marein\ConnectFour\Domain\Game\Exception\GameNotWinnableException;
+use Marein\ConnectFour\Domain\Game\Exception\PlayersHaveSameStoneException;
+use Marein\ConnectFour\Domain\Game\Exception\PlayersNotUniqueException;
+use Marein\ConnectFour\Domain\Game\Exception\UnexpectedPlayerException;
 use Marein\ConnectFour\Domain\Game\Exception\OutOfSizeException;
-use Marein\ConnectFour\Domain\Game\Exception\NextStoneExpectedException;
 
 class GameTest extends \PHPUnit_Framework_TestCase
 {
+    const PLAYER1 = '12345';
+    const PLAYER2 = '67890';
+
     /**
      * @test
      */
     public function itShouldBeCreatedWithEmptyFields()
     {
-        $game = Game::open(Configuration::custom(
-            new Size(4, 4),
-            new RequiredMatches(4)
-        ));
+        $game = $this->create4x4Game();
 
         $filtered = array_filter($game->fields(), function ($field) {
             /** @var Field $field */
@@ -33,7 +34,7 @@ class GameTest extends \PHPUnit_Framework_TestCase
      */
     public function itFieldCountShouldBeTheProductOfSize()
     {
-        $game = Game::open(Configuration::common());
+        $game = $this->createCommonGame();
 
         $this->assertCount(42, $game->fields());
     }
@@ -43,19 +44,16 @@ class GameTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldBeDrawWhenNoMatchIsFoundAndAllFieldsAreFilled()
     {
-        $game = Game::open(Configuration::custom(
-            new Size(2, 4),
-            new RequiredMatches(4)
-        ));
+        $game = $this->create2x4Game();
 
-        $game->dropStone(Stone::pickUpRed(), 1);
-        $game->dropStone(Stone::pickUpYellow(), 1);
-        $game->dropStone(Stone::pickUpRed(), 1);
-        $game->dropStone(Stone::pickUpYellow(), 1);
-        $game->dropStone(Stone::pickUpRed(), 2);
-        $game->dropStone(Stone::pickUpYellow(), 2);
-        $game->dropStone(Stone::pickUpRed(), 2);
-        $game->dropStone(Stone::pickUpYellow(), 2);
+        $game->move(self::PLAYER1, 1);
+        $game->move(self::PLAYER2, 1);
+        $game->move(self::PLAYER1, 1);
+        $game->move(self::PLAYER2, 1);
+        $game->move(self::PLAYER1, 2);
+        $game->move(self::PLAYER2, 2);
+        $game->move(self::PLAYER1, 2);
+        $game->move(self::PLAYER2, 2);
 
         $this->assertTrue($game->isDraw());
         $this->assertFalse($game->isWin());
@@ -69,10 +67,10 @@ class GameTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldBeWinWhenMatchIsFound(array $moves)
     {
-        $game = Game::open(Configuration::common());
+        $game = $this->createCommonGame();
 
         foreach ($moves as $move) {
-            $game->dropStone($move[0], $move[1]);
+            $game->move($move[0], $move[1]);
         }
 
         $this->assertFalse($game->isDraw());
@@ -88,57 +86,57 @@ class GameTest extends \PHPUnit_Framework_TestCase
             // Match in column
             [
                 [
-                    [Stone::pickUpRed(), 1],
-                    [Stone::pickUpYellow(), 2],
-                    [Stone::pickUpRed(), 1],
-                    [Stone::pickUpYellow(), 2],
-                    [Stone::pickUpRed(), 1],
-                    [Stone::pickUpYellow(), 2],
-                    [Stone::pickUpRed(), 1]
+                    [self::PLAYER1, 1],
+                    [self::PLAYER2, 2],
+                    [self::PLAYER1, 1],
+                    [self::PLAYER2, 2],
+                    [self::PLAYER1, 1],
+                    [self::PLAYER2, 2],
+                    [self::PLAYER1, 1]
                 ]
             ],
             // Match in row
             [
                 [
-                    [Stone::pickUpRed(), 1],
-                    [Stone::pickUpYellow(), 1],
-                    [Stone::pickUpRed(), 2],
-                    [Stone::pickUpYellow(), 2],
-                    [Stone::pickUpRed(), 3],
-                    [Stone::pickUpYellow(), 3],
-                    [Stone::pickUpRed(), 4]
+                    [self::PLAYER1, 1],
+                    [self::PLAYER2, 1],
+                    [self::PLAYER1, 2],
+                    [self::PLAYER2, 2],
+                    [self::PLAYER1, 3],
+                    [self::PLAYER2, 3],
+                    [self::PLAYER1, 4]
                 ]
             ],
             // Match in diagonal down
             [
                 [
-                    [Stone::pickUpRed(), 7],
-                    [Stone::pickUpYellow(), 6],
-                    [Stone::pickUpRed(), 6],
-                    [Stone::pickUpYellow(), 5],
-                    [Stone::pickUpRed(), 4],
-                    [Stone::pickUpYellow(), 5],
-                    [Stone::pickUpRed(), 5],
-                    [Stone::pickUpYellow(), 4],
-                    [Stone::pickUpRed(), 4],
-                    [Stone::pickUpYellow(), 1],
-                    [Stone::pickUpRed(), 4]
+                    [self::PLAYER1, 7],
+                    [self::PLAYER2, 6],
+                    [self::PLAYER1, 6],
+                    [self::PLAYER2, 5],
+                    [self::PLAYER1, 4],
+                    [self::PLAYER2, 5],
+                    [self::PLAYER1, 5],
+                    [self::PLAYER2, 4],
+                    [self::PLAYER1, 4],
+                    [self::PLAYER2, 1],
+                    [self::PLAYER1, 4]
                 ]
             ],
             // Match in diagonal up
             [
                 [
-                    [Stone::pickUpRed(), 1],
-                    [Stone::pickUpYellow(), 2],
-                    [Stone::pickUpRed(), 2],
-                    [Stone::pickUpYellow(), 3],
-                    [Stone::pickUpRed(), 3],
-                    [Stone::pickUpYellow(), 4],
-                    [Stone::pickUpRed(), 3],
-                    [Stone::pickUpYellow(), 4],
-                    [Stone::pickUpRed(), 4],
-                    [Stone::pickUpYellow(), 6],
-                    [Stone::pickUpRed(), 4]
+                    [self::PLAYER1, 1],
+                    [self::PLAYER2, 2],
+                    [self::PLAYER1, 2],
+                    [self::PLAYER2, 3],
+                    [self::PLAYER1, 3],
+                    [self::PLAYER2, 4],
+                    [self::PLAYER1, 3],
+                    [self::PLAYER2, 4],
+                    [self::PLAYER1, 4],
+                    [self::PLAYER2, 6],
+                    [self::PLAYER1, 4]
                 ]
             ]
         ];
@@ -149,27 +147,24 @@ class GameTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldBeWinWhenLastDropIsAMatch()
     {
-        $game = Game::open(Configuration::custom(
-            new Size(4, 4),
-            new RequiredMatches(4)
-        ));
+        $game = $this->create4x4Game();
 
-        $game->dropStone(Stone::pickUpRed(), 2);
-        $game->dropStone(Stone::pickUpYellow(), 1);
-        $game->dropStone(Stone::pickUpRed(), 2);
-        $game->dropStone(Stone::pickUpYellow(), 1);
-        $game->dropStone(Stone::pickUpRed(), 2);
-        $game->dropStone(Stone::pickUpYellow(), 1);
-        $game->dropStone(Stone::pickUpRed(), 3);
-        $game->dropStone(Stone::pickUpYellow(), 2);
-        $game->dropStone(Stone::pickUpRed(), 3);
-        $game->dropStone(Stone::pickUpYellow(), 3);
-        $game->dropStone(Stone::pickUpRed(), 3);
-        $game->dropStone(Stone::pickUpYellow(), 4);
-        $game->dropStone(Stone::pickUpRed(), 4);
-        $game->dropStone(Stone::pickUpYellow(), 4);
-        $game->dropStone(Stone::pickUpRed(), 4);
-        $game->dropStone(Stone::pickUpYellow(), 1);
+        $game->move(self::PLAYER1, 2);
+        $game->move(self::PLAYER2, 1);
+        $game->move(self::PLAYER1, 2);
+        $game->move(self::PLAYER2, 1);
+        $game->move(self::PLAYER1, 2);
+        $game->move(self::PLAYER2, 1);
+        $game->move(self::PLAYER1, 3);
+        $game->move(self::PLAYER2, 2);
+        $game->move(self::PLAYER1, 3);
+        $game->move(self::PLAYER2, 3);
+        $game->move(self::PLAYER1, 3);
+        $game->move(self::PLAYER2, 4);
+        $game->move(self::PLAYER1, 4);
+        $game->move(self::PLAYER2, 4);
+        $game->move(self::PLAYER1, 4);
+        $game->move(self::PLAYER2, 1);
 
         $this->assertFalse($game->isDraw());
         $this->assertTrue($game->isWin());
@@ -178,17 +173,42 @@ class GameTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function itShouldExpectOneStoneAfterAnother()
+    public function itShouldExpectOnePlayerAfterAnother()
     {
-        $this->expectException(NextStoneExpectedException::class);
+        $this->expectException(UnexpectedPlayerException::class);
 
-        $game = Game::open(Configuration::custom(
-            new Size(4, 2),
-            new RequiredMatches(4)
-        ));
+        $game = $this->create4x2Game();
 
-        $game->dropStone(Stone::pickUpRed(), 1);
-        $game->dropStone(Stone::pickUpRed(), 1);
+        $game->move(self::PLAYER1, 1);
+        $game->move(self::PLAYER1, 1);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldExpectUniquePlayers()
+    {
+        $this->expectException(PlayersNotUniqueException::class);
+
+        Game::open(
+            Configuration::common(),
+            new Player(self::PLAYER1, Stone::pickUpRed()),
+            new Player(self::PLAYER1, Stone::pickUpYellow())
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldExpectPlayerWithDifferentStones()
+    {
+        $this->expectException(PlayersHaveSameStoneException::class);
+
+        Game::open(
+            Configuration::common(),
+            new Player(self::PLAYER1, Stone::pickUpRed()),
+            new Player(self::PLAYER2, Stone::pickUpRed())
+        );
     }
 
     /**
@@ -198,20 +218,17 @@ class GameTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectException(GameFinishedException::class);
 
-        $game = Game::open(Configuration::custom(
-            new Size(2, 4),
-            new RequiredMatches(4)
-        ));
+        $game = $this->create2x4Game();
 
-        $game->dropStone(Stone::pickUpRed(), 1);
-        $game->dropStone(Stone::pickUpYellow(), 1);
-        $game->dropStone(Stone::pickUpRed(), 1);
-        $game->dropStone(Stone::pickUpYellow(), 1);
-        $game->dropStone(Stone::pickUpRed(), 2);
-        $game->dropStone(Stone::pickUpYellow(), 2);
-        $game->dropStone(Stone::pickUpRed(), 2);
-        $game->dropStone(Stone::pickUpYellow(), 2);
-        $game->dropStone(Stone::pickUpRed(), 1);
+        $game->move(self::PLAYER1, 1);
+        $game->move(self::PLAYER2, 1);
+        $game->move(self::PLAYER1, 1);
+        $game->move(self::PLAYER2, 1);
+        $game->move(self::PLAYER1, 2);
+        $game->move(self::PLAYER2, 2);
+        $game->move(self::PLAYER1, 2);
+        $game->move(self::PLAYER2, 2);
+        $game->move(self::PLAYER1, 1);
     }
 
     /**
@@ -221,19 +238,16 @@ class GameTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectException(GameFinishedException::class);
 
-        $game = Game::open(Configuration::custom(
-            new Size(4, 2),
-            new RequiredMatches(4)
-        ));
+        $game = $this->create4x2Game();
 
-        $game->dropStone(Stone::pickUpRed(), 1);
-        $game->dropStone(Stone::pickUpYellow(), 1);
-        $game->dropStone(Stone::pickUpRed(), 2);
-        $game->dropStone(Stone::pickUpYellow(), 2);
-        $game->dropStone(Stone::pickUpRed(), 3);
-        $game->dropStone(Stone::pickUpYellow(), 3);
-        $game->dropStone(Stone::pickUpRed(), 4);
-        $game->dropStone(Stone::pickUpYellow(), 3);
+        $game->move(self::PLAYER1, 1);
+        $game->move(self::PLAYER2, 1);
+        $game->move(self::PLAYER1, 2);
+        $game->move(self::PLAYER2, 2);
+        $game->move(self::PLAYER1, 3);
+        $game->move(self::PLAYER2, 3);
+        $game->move(self::PLAYER1, 4);
+        $game->move(self::PLAYER2, 3);
     }
 
     /**
@@ -243,12 +257,9 @@ class GameTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectException(OutOfSizeException::class);
 
-        $game = Game::open(Configuration::custom(
-            new Size(4, 2),
-            new RequiredMatches(4)
-        ));
+        $game = $this->create4x2Game();
 
-        $game->dropStone(Stone::pickUpRed(), 5);
+        $game->move(self::PLAYER1, 5);
     }
 
     /**
@@ -258,13 +269,67 @@ class GameTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectException(ColumnAlreadyFilledException::class);
 
-        $game = Game::open(Configuration::custom(
-            new Size(4, 2),
-            new RequiredMatches(4)
-        ));
+        $game = $this->create4x2Game();
 
-        $game->dropStone(Stone::pickUpRed(), 1);
-        $game->dropStone(Stone::pickUpYellow(), 1);
-        $game->dropStone(Stone::pickUpRed(), 1);
+        $game->move(self::PLAYER1, 1);
+        $game->move(self::PLAYER2, 1);
+        $game->move(self::PLAYER1, 1);
+    }
+
+    /**
+     * @return Game
+     */
+    private function create2x4Game(): Game
+    {
+        return Game::open(
+            Configuration::custom(
+                new Size(2, 4),
+                new RequiredMatches(4)
+            ),
+            new Player(self::PLAYER1, Stone::pickUpRed()),
+            new Player(self::PLAYER2, Stone::pickUpYellow())
+        );
+    }
+
+    /**
+     * @return Game
+     */
+    private function create4x2Game(): Game
+    {
+        return Game::open(
+            Configuration::custom(
+                new Size(4, 2),
+                new RequiredMatches(4)
+            ),
+            new Player(self::PLAYER1, Stone::pickUpRed()),
+            new Player(self::PLAYER2, Stone::pickUpYellow())
+        );
+    }
+
+    /**
+     * @return Game
+     */
+    private function create4x4Game(): Game
+    {
+        return Game::open(
+            Configuration::custom(
+                new Size(4, 4),
+                new RequiredMatches(4)
+            ),
+            new Player(self::PLAYER1, Stone::pickUpRed()),
+            new Player(self::PLAYER2, Stone::pickUpYellow())
+        );
+    }
+
+    /**
+     * @return Game
+     */
+    private function createCommonGame(): Game
+    {
+        return Game::open(
+            Configuration::common(),
+            new Player(self::PLAYER1, Stone::pickUpRed()),
+            new Player(self::PLAYER2, Stone::pickUpYellow())
+        );
     }
 }
