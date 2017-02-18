@@ -161,9 +161,9 @@ final class Board
     /**
      * Returns the last used [Field].
      *
-     * @return Field
+     * @return Field|null
      */
-    public function lastUsedField(): Field
+    public function lastUsedField()
     {
         return $this->lastUsedField;
     }
