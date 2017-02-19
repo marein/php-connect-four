@@ -4,14 +4,16 @@
 namespace {
 
     use Marein\ConnectFour\Domain\Game\Configuration;
-    use Marein\ConnectFour\Domain\Game\Player;
-    use Marein\ConnectFour\Player\ConsolePlayer;
-    use Marein\ConnectFour\View\GameView;
+    use Marein\ConnectFour\Domain\Game\Exception\ColumnAlreadyFilledException;
     use Marein\ConnectFour\Domain\Game\Game;
-    use Marein\ConnectFour\Player\RandomNpcPlayer;
+    use Marein\ConnectFour\Domain\Game\Player;
     use Marein\ConnectFour\Domain\Game\Stone;
 
     require_once __DIR__ . '/../vendor/autoload.php';
+
+    /**
+     * Example implementation
+     */
 
     $player1Id = uniqid();
     $player2Id = uniqid();
@@ -21,34 +23,94 @@ namespace {
         new Player($player1Id, Stone::red()),
         new Player($player2Id, Stone::yellow())
     );
-    $view = new GameView();
 
-    $player1 = new ConsolePlayer($player1Id, $game);
-//    $player1 = new RandomNpcPlayer($player1Id, $game, 0.1);
-    $player2 = new RandomNpcPlayer($player2Id, $game, 0.5);
-
-    $view->render($game);
+    renderGame($game);
 
     while (!$game->isDraw() && !$game->isWin()) {
 
-        $player1->play();
-        $view->render($game);
+        consoleMove($game, $player1Id);
+        renderGame($game);
 
         if ($game->isWin()) {
             break;
         }
 
-        $player2->play();
-        $view->render($game);
+        cpuMove($game, $player2Id);
+        renderGame($game);
     }
 
     if ($game->isDraw()) {
         echo 'Draw.';
-    } else if ($game->winner()->id() == $player1Id) {
-        echo 'Player 1 win.';
-    } else if ($game->winner()->id() == $player2Id) {
-        echo 'Player 2 win';
+    } else {
+        if ($game->winner()->id() == $player1Id) {
+            echo 'Player 1 win.';
+        } else {
+            if ($game->winner()->id() == $player2Id) {
+                echo 'Player 2 win';
+            }
+        }
     }
 
     echo PHP_EOL . PHP_EOL;
+
+    function renderGame(Game $game)
+    {
+        // Clear screen
+        echo "\033\143" . PHP_EOL;
+
+        // Print header
+        $width = $game->configuration()->size()->width();
+        foreach (range(1, $width) as $column) {
+            echo '| ' . $column . ' ' . ($column == $width ? '|' : '');
+        }
+        echo PHP_EOL . PHP_EOL;
+
+        // Print fields
+        $fields = $game->fields();
+        $width = $game->configuration()->size()->width();
+        foreach ($fields as $i => $field) {
+            $colorizedField = str_replace(
+                [Stone::RED, Stone::YELLOW],
+                ["\033[0;31mO\033[0m", "\033[1;33mO\033[0m"],
+                $field
+            );
+            echo '| ' . $colorizedField . ' ';
+
+            if (($i + 1) % $width == 0) {
+                echo '|' . PHP_EOL . PHP_EOL;
+            }
+        }
+    }
+
+    function consoleMove(Game $game, string $id)
+    {
+        do {
+            $error = false;
+            do {
+                $column = trim(readline(PHP_EOL . 'Choose your column [1 - 7]: '));
+            } while (!in_array($column, range(1, $game->configuration()->size()->width())));
+            try {
+                $game->move($id, $column);
+            } catch (ColumnAlreadyFilledException $e) {
+                $error = true;
+            }
+        } while ($error);
+    }
+
+    function cpuMove(Game $game, string $id)
+    {
+        echo PHP_EOL . 'Waiting for NPC...';
+
+        usleep(0.5 * 1000000);
+
+        do {
+            $error = false;
+            try {
+                $column = rand(1, $game->configuration()->size()->width());
+                $game->move($id, $column);
+            } catch (ColumnAlreadyFilledException $e) {
+                $error = true;
+            }
+        } while ($error);
+    }
 }
