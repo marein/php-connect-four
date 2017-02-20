@@ -18,9 +18,9 @@ final class CommonWinningStrategy implements WinningStrategy
     public function __construct()
     {
         $this->winningStrategy = new MultipleWinningStrategies([
-            new VerticalWinningStrategy(),
-            new HorizontalWinningStrategy(),
-            new DiagonalWinningStrategy()
+            new VerticalWinningStrategy(4),
+            new HorizontalWinningStrategy(4),
+            new DiagonalWinningStrategy(4)
         ]);
     }
 

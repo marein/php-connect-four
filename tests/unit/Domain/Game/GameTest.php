@@ -223,7 +223,6 @@ class GameTest extends \PHPUnit_Framework_TestCase
         return Game::open(
             Configuration::custom(
                 new Size(2, 4),
-                new RequiredMatches(4),
                 new CommonWinningStrategy()
             ),
             new Player(self::PLAYER1, Stone::red()),
@@ -239,7 +238,6 @@ class GameTest extends \PHPUnit_Framework_TestCase
         return Game::open(
             Configuration::custom(
                 new Size(4, 2),
-                new RequiredMatches(4),
                 new CommonWinningStrategy()
             ),
             new Player(self::PLAYER1, Stone::red()),
@@ -255,7 +253,6 @@ class GameTest extends \PHPUnit_Framework_TestCase
         return Game::open(
             Configuration::custom(
                 new Size(4, 4),
-                new RequiredMatches(4),
                 new CommonWinningStrategy()
             ),
             new Player(self::PLAYER1, Stone::red()),

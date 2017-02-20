@@ -2,7 +2,6 @@
 
 namespace Marein\ConnectFour\Domain\Game;
 
-use Marein\ConnectFour\Domain\Game\Exception\GameNotWinnableException;
 use Marein\ConnectFour\Domain\Game\WinningStrategy\CommonWinningStrategy;
 use Marein\ConnectFour\Domain\Game\WinningStrategy\WinningStrategy;
 
@@ -14,11 +13,6 @@ final class Configuration
     private $size;
 
     /**
-     * @var RequiredMatches
-     */
-    private $requiredMatches;
-
-    /**
      * @var WinningStrategy
      */
     private $winningStrategy;
@@ -27,16 +21,12 @@ final class Configuration
      * Configuration constructor.
      *
      * @param Size            $size
-     * @param RequiredMatches $requiredMatches
      * @param WinningStrategy $winningStrategy
      */
-    private function __construct(Size $size, RequiredMatches $requiredMatches, WinningStrategy $winningStrategy)
+    private function __construct(Size $size, WinningStrategy $winningStrategy)
     {
         $this->size = $size;
-        $this->requiredMatches = $requiredMatches;
         $this->winningStrategy = $winningStrategy;
-
-        $this->guardGameIsWinnable();
     }
 
     /*************************************************************
@@ -52,7 +42,6 @@ final class Configuration
     {
         return new self(
             new Size(7, 6),
-            new RequiredMatches(4),
             new CommonWinningStrategy()
         );
     }
@@ -61,32 +50,13 @@ final class Configuration
      * Create a custom [Configuration].
      *
      * @param Size            $size
-     * @param RequiredMatches $requiredMatches
      * @param WinningStrategy $winningStrategy
      *
      * @return Configuration
      */
-    public static function custom(Size $size, RequiredMatches $requiredMatches, WinningStrategy $winningStrategy)
+    public static function custom(Size $size, WinningStrategy $winningStrategy)
     {
-        return new self($size, $requiredMatches, $winningStrategy);
-    }
-
-    /*************************************************************
-     *                          Guards
-     *************************************************************/
-
-    /**
-     * Guard that [Game] is winnable with this [Configuration].
-     *
-     * @throws GameNotWinnableException
-     */
-    private function guardGameIsWinnable()
-    {
-        if ($this->requiredMatches()->value() > $this->size()->height() &&
-            $this->requiredMatches()->value() > $this->size()->width()
-        ) {
-            throw new GameNotWinnableException();
-        }
+        return new self($size, $winningStrategy);
     }
 
     /*************************************************************
@@ -101,16 +71,6 @@ final class Configuration
     public function size()
     {
         return $this->size;
-    }
-
-    /**
-     * Returns the [RequiredMatches].
-     *
-     * @return RequiredMatches
-     */
-    public function requiredMatches()
-    {
-        return $this->requiredMatches;
     }
 
     /**

@@ -4,7 +4,6 @@ namespace Marein\ConnectFour\Domain\Game\WinningStrategy;
 
 use Marein\ConnectFour\Domain\Game\Board;
 use Marein\ConnectFour\Domain\Game\Configuration;
-use Marein\ConnectFour\Domain\Game\RequiredMatches;
 use Marein\ConnectFour\Domain\Game\Size;
 
 class MultipleWinningStrategyTest extends \PHPUnit_Framework_TestCase
@@ -16,7 +15,6 @@ class MultipleWinningStrategyTest extends \PHPUnit_Framework_TestCase
     {
         $configuration = Configuration::custom(
             new Size(7, 6),
-            new RequiredMatches(4),
             new MultipleWinningStrategies([])
         );
 
