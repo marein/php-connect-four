@@ -27,7 +27,7 @@ final class CommonWinningStrategy implements WinningStrategy
     /**
      * @inheritdoc
      */
-    public function calculate(Configuration $configuration, Board $board)
+    public function calculate(Configuration $configuration, Board $board): bool
     {
         return $this->winningStrategy->calculate($configuration, $board);
     }

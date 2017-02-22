@@ -25,7 +25,7 @@ final class MultipleWinningStrategies implements WinningStrategy
     /**
      * @inheritdoc
      */
-    public function calculate(Configuration $configuration, Board $board)
+    public function calculate(Configuration $configuration, Board $board): bool
     {
         foreach ($this->winningStrategies as $winningStrategy) {
             if ($winningStrategy->calculate($configuration, $board)) {

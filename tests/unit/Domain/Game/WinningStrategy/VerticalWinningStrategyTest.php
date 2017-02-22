@@ -12,7 +12,7 @@ class VerticalWinningStrategyTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function itShouldCalculateForWin()
+    public function itShouldCalculateForWin(): void
     {
         $configuration = Configuration::custom(
             new Size(7, 6),

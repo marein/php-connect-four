@@ -1,5 +1,6 @@
 <?php
 
+
 namespace Marein\ConnectFour\Domain\Game;
 
 use Marein\ConnectFour\Domain\Game\Exception\ColumnAlreadyFilledException;
@@ -39,7 +40,7 @@ final class Board
      *
      * @return Board
      */
-    public static function empty(Configuration $configuration)
+    public static function empty(Configuration $configuration): Board
     {
         $fields = [];
 
@@ -60,11 +61,11 @@ final class Board
      * Drops a [Stone] in the given column.
      *
      * @param Stone $stone
-     * @param       $column
+     * @param int   $column
      *
      * @return Board
      */
-    public function dropStone(Stone $stone, $column)
+    public function dropStone(Stone $stone, int $column): Board
     {
         $firstEmptyFieldPosition = $this->findPositionOfFirstEmptyFieldInColumn($column);
 
@@ -85,12 +86,12 @@ final class Board
      *
      * @param int $column
      *
-     * @return integer
+     * @return int
      * @throws ColumnAlreadyFilledException
      */
-    private function findPositionOfFirstEmptyFieldInColumn($column)
+    private function findPositionOfFirstEmptyFieldInColumn(int $column): int
     {
-        /** @var Field[] $reversed */
+        /** @var Field[] $reversedFields */
         $reversedFields = array_reverse($this->findFieldsByColumn($column), true);
 
         foreach ($reversedFields as $position => $field) {
@@ -109,7 +110,7 @@ final class Board
      *
      * @return Field[]
      */
-    public function findFieldsByColumn($column)
+    public function findFieldsByColumn(int $column): array
     {
         return array_filter($this->fields, function (Field $field) use ($column) {
             return $field->point()->x() == $column;
@@ -123,7 +124,7 @@ final class Board
      *
      * @return Field[]
      */
-    public function findFieldsByRow($row)
+    public function findFieldsByRow(int $row): array
     {
         return array_filter($this->fields, function (Field $field) use ($row) {
             return $field->point()->y() == $row;
@@ -137,7 +138,7 @@ final class Board
      *
      * @return Field[]
      */
-    public function findFieldsByPoints(array $points)
+    public function findFieldsByPoints(array $points): array
     {
         return array_filter($this->fields, function (Field $field) use ($points) {
             return in_array($field->point(), $points);
@@ -163,7 +164,7 @@ final class Board
      *
      * @return Field|null
      */
-    public function lastUsedField()
+    public function lastUsedField(): ?Field
     {
         return $this->lastUsedField;
     }

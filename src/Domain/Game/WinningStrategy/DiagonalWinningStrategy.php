@@ -23,7 +23,7 @@ final class DiagonalWinningStrategy implements WinningStrategy
      *
      * @throws InvalidNumberOfRequiredMatchesException
      */
-    public function __construct($numberOfRequiredMatches)
+    public function __construct(int $numberOfRequiredMatches)
     {
         if ($numberOfRequiredMatches < 4) {
             throw new InvalidNumberOfRequiredMatchesException('The value must be at least ' . self::MINIMUM . '.');
@@ -35,7 +35,7 @@ final class DiagonalWinningStrategy implements WinningStrategy
     /**
      * @inheritdoc
      */
-    public function calculate(Configuration $configuration, Board $board)
+    public function calculate(Configuration $configuration, Board $board): bool
     {
         if (!$board->lastUsedField()) {
             return false;
@@ -54,7 +54,7 @@ final class DiagonalWinningStrategy implements WinningStrategy
         // Create a string representation of fields e.g. "000121 000121"
         $haystack = implode($fields1) . ' ' . implode($fields2);
         // Create a string like "1111|2222" depending on the stone and the required matches.
-        $needle = str_repeat($stone->color(), $this->numberOfRequiredMatches);
+        $needle = str_repeat((string)$stone->color(), $this->numberOfRequiredMatches);
 
         // Check whether "1111|2222" is in "000121 000121"
         return strpos($haystack, $needle) !== false;

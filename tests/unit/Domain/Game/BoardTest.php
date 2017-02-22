@@ -13,7 +13,7 @@ class BoardTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function itShouldBeImmutable()
+    public function itShouldBeImmutable(): void
     {
         $configuration = Configuration::common();
         $board = Board::empty($configuration);

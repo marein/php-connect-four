@@ -20,7 +20,7 @@ final class Point
      * @param int $x
      * @param int $y
      */
-    public function __construct($x, $y)
+    public function __construct(int $x, int $y)
     {
         $this->x = $x;
         $this->y = $y;
@@ -31,7 +31,7 @@ final class Point
      *
      * @return int
      */
-    public function x()
+    public function x(): int
     {
         return $this->x;
     }
@@ -41,7 +41,7 @@ final class Point
      *
      * @return int
      */
-    public function y()
+    public function y(): int
     {
         return $this->y;
     }
@@ -56,7 +56,7 @@ final class Point
      *
      * @return Point[]
      */
-    public static function createPointsInDiagonalUp(Point $fromPoint, Size $withinSize)
+    public static function createPointsInDiagonalUp(Point $fromPoint, Size $withinSize): array
     {
         $points = [];
 
@@ -79,9 +79,9 @@ final class Point
      * @param Point $fromPoint
      * @param Size  $withinSize
      *
-     * @return array
+     * @return Point[]
      */
-    public static function createPointsInDiagonalDown(Point $fromPoint, Size $withinSize)
+    public static function createPointsInDiagonalDown(Point $fromPoint, Size $withinSize): array
     {
         $points = [];
 

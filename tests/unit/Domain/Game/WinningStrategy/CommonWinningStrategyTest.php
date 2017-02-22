@@ -7,7 +7,7 @@ class CommonWinningStrategyTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function itShouldHaveTheRightStrategies()
+    public function itShouldHaveTheRightStrategies(): void
     {
         // Test for the right strategies directly at property level.
         $commonReflectionProperty = new \ReflectionProperty(CommonWinningStrategy::class, 'winningStrategy');

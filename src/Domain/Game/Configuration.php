@@ -38,7 +38,7 @@ final class Configuration
      *
      * @return Configuration
      */
-    public static function common()
+    public static function common(): Configuration
     {
         return new self(
             new Size(7, 6),
@@ -54,7 +54,7 @@ final class Configuration
      *
      * @return Configuration
      */
-    public static function custom(Size $size, WinningStrategy $winningStrategy)
+    public static function custom(Size $size, WinningStrategy $winningStrategy): Configuration
     {
         return new self($size, $winningStrategy);
     }
@@ -68,7 +68,7 @@ final class Configuration
      *
      * @return Size
      */
-    public function size()
+    public function size(): Size
     {
         return $this->size;
     }
@@ -78,7 +78,7 @@ final class Configuration
      *
      * @return WinningStrategy
      */
-    public function winningStrategy()
+    public function winningStrategy(): WinningStrategy
     {
         return $this->winningStrategy;
     }

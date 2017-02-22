@@ -15,5 +15,5 @@ interface WinningStrategy
      *
      * @return bool
      */
-    public function calculate(Configuration $configuration, Board $board);
+    public function calculate(Configuration $configuration, Board $board): bool;
 }

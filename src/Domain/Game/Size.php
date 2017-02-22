@@ -19,12 +19,12 @@ final class Size
     /**
      * Size constructor.
      *
-     * @param $width
-     * @param $height
+     * @param int $width
+     * @param int $height
      *
      * @throws InvalidSizeException
      */
-    public function __construct($width, $height)
+    public function __construct(int $width, int $height)
     {
         if ($width < 2 || $height < 2) {
             throw new InvalidSizeException('Width and height must be greater then 1.');
@@ -43,7 +43,7 @@ final class Size
      *
      * @return int
      */
-    public function width()
+    public function width(): int
     {
         return $this->width;
     }
@@ -53,7 +53,7 @@ final class Size
      *
      * @return int
      */
-    public function height()
+    public function height(): int
     {
         return $this->height;
     }

@@ -7,7 +7,7 @@ class PointTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function itShouldBeCreatedWithItsValues()
+    public function itShouldBeCreatedWithItsValues(): void
     {
         $point = new Point(3, 4);
 
@@ -23,7 +23,7 @@ class PointTest extends \PHPUnit_Framework_TestCase
      * @param Point   $point
      * @param Point[] $expectedPoints
      */
-    public function itShouldCalculateDiagonalPointsUp($size, Point $point, array $expectedPoints)
+    public function itShouldCalculateDiagonalPointsUp(Size $size, Point $point, array $expectedPoints): void
     {
         // Call array_values for re-index
         $this->assertEquals(
@@ -35,7 +35,7 @@ class PointTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function pointsUpProvider()
+    public function pointsUpProvider(): array
     {
         return [
             [
@@ -84,7 +84,7 @@ class PointTest extends \PHPUnit_Framework_TestCase
      * @param Point   $point
      * @param Point[] $expectedPoints
      */
-    public function itShouldCalculateDiagonalPointsDown($size, Point $point, array $expectedPoints)
+    public function itShouldCalculateDiagonalPointsDown(Size $size, Point $point, array $expectedPoints): void
     {
         // Call array_values for re-index
         $this->assertEquals(
@@ -96,7 +96,7 @@ class PointTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function pointsDownProvider()
+    public function pointsDownProvider(): array
     {
         return [
             [

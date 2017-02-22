@@ -7,7 +7,7 @@ class StoneTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function aRedStoneCanBeCreated()
+    public function aRedStoneCanBeCreated(): void
     {
         $this->assertEquals(Stone::red()->color(), Stone::RED);
     }
@@ -15,7 +15,7 @@ class StoneTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function aYellowStoneCanBeCreated()
+    public function aYellowStoneCanBeCreated(): void
     {
         $this->assertEquals(Stone::yellow()->color(), Stone::YELLOW);
     }

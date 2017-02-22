@@ -13,7 +13,7 @@ class SizeTest extends \PHPUnit_Framework_TestCase
      * @param int $width
      * @param int $height
      */
-    public function itShouldBeCreatedSuccessfully($width, $height)
+    public function itShouldBeCreatedSuccessfully(int $width, int $height): void
     {
         new Size($width, $height);
     }
@@ -21,7 +21,7 @@ class SizeTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function correctSizeProvider()
+    public function correctSizeProvider(): array
     {
         return [
             [4, 4],
@@ -38,7 +38,7 @@ class SizeTest extends \PHPUnit_Framework_TestCase
      * @param int $width
      * @param int $height
      */
-    public function itShouldThrowAnExceptionOnInvalidSizes($width, $height)
+    public function itShouldThrowAnExceptionOnInvalidSizes(int $width, int $height): void
     {
         $this->expectException(InvalidSizeException::class);
 
@@ -48,7 +48,7 @@ class SizeTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function wrongSizeProvider()
+    public function wrongSizeProvider(): array
     {
         return [
             [3, 3],

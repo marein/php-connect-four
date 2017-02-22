@@ -40,7 +40,7 @@ namespace {
     if ($game->isDraw()) {
         echo 'Draw';
     } else {
-        echo 'Winner ' . colorizeStoneColor($game->winner()->stone()->color());
+        echo 'Winner ' . colorizeStoneColor((string)$game->winner()->stone()->color());
     }
 
     echo PHP_EOL . PHP_EOL;
@@ -51,7 +51,7 @@ namespace {
         echo "\033\143" . PHP_EOL;
 
         $width = $game->configuration()->size()->width();
-        $fillLength = strlen($width);
+        $fillLength = strlen((string)$width);
         $fillLength = $fillLength % 2 == 0 ? $fillLength + 1 : $fillLength;
 
         // Print header
@@ -65,12 +65,12 @@ namespace {
 
         // Print fields
         $fields = $game->fields();
-        $filler = str_repeat(' ', floor($fillLength / 2));
+        $filler = str_repeat(' ', (int)floor($fillLength / 2));
         foreach ($fields as $i => $field) {
             echo sprintf(
                 '| %s%s%s %s',
                 $filler,
-                colorizeStoneColor($field),
+                colorizeStoneColor((string)$field),
                 $filler,
                 ($i + 1) % $width == 0 ? '|' . PHP_EOL . PHP_EOL : '' // Line break after each row
             );
@@ -92,7 +92,7 @@ namespace {
 
         try {
             $column = trim(readline('Choose your column [1 - ' . $width . ']: '));
-            $game->move($id, $column);
+            $game->move($id, (int)$column);
         } catch (OutOfSizeException $e) {
             consoleMove($game, $id);
         } catch (ColumnAlreadyFilledException $e) {
@@ -106,7 +106,7 @@ namespace {
 
         $width = $game->configuration()->size()->width();
 
-        usleep(0.5 * 1000000);
+        usleep((int)(0.5 * 1000000));
 
         try {
             $column = rand(1, $width);

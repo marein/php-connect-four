@@ -33,7 +33,7 @@ final class Field
      *
      * @return Field
      */
-    public static function empty(Point $point)
+    public static function empty(Point $point): Field
     {
         return new self($point);
     }
@@ -45,7 +45,7 @@ final class Field
      *
      * @return Field
      */
-    public function placeStone(Stone $stone)
+    public function placeStone(Stone $stone): Field
     {
         return new self($this->point(), $stone);
     }
@@ -55,7 +55,7 @@ final class Field
      *
      * @return bool
      */
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         return $this->stone === null;
     }
@@ -65,7 +65,7 @@ final class Field
      *
      * @return Stone|null
      */
-    public function stone()
+    public function stone(): ?Stone
     {
         return $this->stone;
     }
@@ -75,7 +75,7 @@ final class Field
      *
      * @return Point
      */
-    public function point()
+    public function point(): Point
     {
         return $this->point;
     }
@@ -85,7 +85,7 @@ final class Field
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         if ($this->isEmpty()) {
             return ' ';

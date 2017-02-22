@@ -7,7 +7,7 @@ class FieldTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function itShouldBeCreatedEmpty()
+    public function itShouldBeCreatedEmpty(): void
     {
         $field = Field::empty(new Point(0, 1));
 
@@ -18,7 +18,7 @@ class FieldTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function aStoneCanBePlaced()
+    public function aStoneCanBePlaced(): void
     {
         $field = Field::empty(new Point(0, 1));
 

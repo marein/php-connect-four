@@ -9,7 +9,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function itShouldBeCreatedWithCommonConfiguration()
+    public function itShouldBeCreatedWithCommonConfiguration(): void
     {
         $configuration = Configuration::common();
 
@@ -21,7 +21,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function itShouldBeCreatedWithCustomConfiguration()
+    public function itShouldBeCreatedWithCustomConfiguration(): void
     {
         $configuration = Configuration::custom(
             new Size(7, 6),

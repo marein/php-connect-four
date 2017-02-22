@@ -20,7 +20,7 @@ final class Stone
      *
      * @param int $color
      */
-    private function __construct($color)
+    private function __construct(int $color)
     {
         $this->color = $color;
     }
@@ -30,7 +30,7 @@ final class Stone
      *
      * @return Stone
      */
-    public static function yellow()
+    public static function yellow(): Stone
     {
         return new self(self::YELLOW);
     }
@@ -40,7 +40,7 @@ final class Stone
      *
      * @return Stone
      */
-    public static function red()
+    public static function red(): Stone
     {
         return new self(self::RED);
     }
@@ -50,7 +50,7 @@ final class Stone
      *
      * @return int
      */
-    public function color()
+    public function color(): int
     {
         return $this->color;
     }

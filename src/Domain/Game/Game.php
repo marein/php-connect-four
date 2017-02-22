@@ -71,7 +71,7 @@ class Game
      *
      * @return Game
      */
-    public static function open(Configuration $configuration, Player $player1, Player $player2)
+    public static function open(Configuration $configuration, Player $player1, Player $player2): Game
     {
         return new self($configuration, $player1, $player2);
     }
@@ -91,7 +91,7 @@ class Game
      * @throws UnexpectedPlayerException
      * @throws OutOfSizeException
      */
-    public function move($playerId, $column)
+    public function move(string $playerId, int $column): void
     {
         $this->guardGameFinished();
         $this->guardColumnFitsInSize($column);
@@ -113,7 +113,7 @@ class Game
     /**
      * Switch the [Player]s.
      */
-    private function switchPlayer()
+    private function switchPlayer(): void
     {
         $this->players = array_reverse($this->players);
     }
@@ -130,7 +130,7 @@ class Game
      *
      * @throws PlayersNotUniqueException
      */
-    private function guardPlayersAreUnique(Player $player1, Player $player2)
+    private function guardPlayersAreUnique(Player $player1, Player $player2): void
     {
         if ($player1->id() == $player2->id()) {
             throw new PlayersNotUniqueException();
@@ -145,7 +145,7 @@ class Game
      *
      * @throws PlayersHaveSameStoneException
      */
-    private function guardPlayersHaveDifferentStones(Player $player1, Player $player2)
+    private function guardPlayersHaveDifferentStones(Player $player1, Player $player2): void
     {
         if ($player1->stone() == $player2->stone()) {
             throw new PlayersHaveSameStoneException();
@@ -159,7 +159,7 @@ class Game
      *
      * @throws UnexpectedPlayerException
      */
-    private function guardExpectedPlayer(string $playerId)
+    private function guardExpectedPlayer(string $playerId): void
     {
         if ($this->currentPlayer()->id() !== $playerId) {
             throw new UnexpectedPlayerException();
@@ -171,7 +171,7 @@ class Game
      *
      * @throws GameFinishedException
      */
-    private function guardGameFinished()
+    private function guardGameFinished(): void
     {
         if ($this->isDraw() || $this->isWin()) {
             throw new GameFinishedException();
@@ -185,7 +185,7 @@ class Game
      *
      * @throws OutOfSizeException
      */
-    private function guardColumnFitsInSize($column)
+    private function guardColumnFitsInSize(int $column): void
     {
         if ($column > $this->configuration()->size()->width()) {
             throw new OutOfSizeException();
@@ -201,7 +201,7 @@ class Game
      *
      * @return Player
      */
-    private function currentPlayer()
+    private function currentPlayer(): Player
     {
         return $this->players[0];
     }
@@ -211,7 +211,7 @@ class Game
      *
      * @return Field[]
      */
-    public function fields()
+    public function fields(): array
     {
         return $this->board->fields();
     }
@@ -221,7 +221,7 @@ class Game
      *
      * @return Configuration
      */
-    public function configuration()
+    public function configuration(): Configuration
     {
         return $this->configuration;
     }
@@ -231,7 +231,7 @@ class Game
      *
      * @return Player|null
      */
-    public function winner()
+    public function winner(): ?Player
     {
         return $this->winner;
     }
@@ -241,7 +241,7 @@ class Game
      *
      * @return bool
      */
-    public function isDraw()
+    public function isDraw(): bool
     {
         return
             !$this->winner &&
@@ -253,7 +253,7 @@ class Game
      *
      * @return bool
      */
-    public function isWin()
+    public function isWin(): bool
     {
         return $this->winner !== null;
     }

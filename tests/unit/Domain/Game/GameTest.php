@@ -18,7 +18,7 @@ class GameTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function itShouldBeCreatedWithEmptyFields()
+    public function itShouldBeCreatedWithEmptyFields(): void
     {
         $game = $this->create4x4Game();
 
@@ -33,7 +33,7 @@ class GameTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function itFieldCountShouldBeTheProductOfSize()
+    public function itFieldCountShouldBeTheProductOfSize(): void
     {
         $game = $this->createCommonGame();
 
@@ -43,7 +43,7 @@ class GameTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function itShouldBeDrawWhenNoMatchIsFoundAndAllFieldsAreFilled()
+    public function itShouldBeDrawWhenNoMatchIsFoundAndAllFieldsAreFilled(): void
     {
         $game = $this->create2x4Game();
 
@@ -63,7 +63,7 @@ class GameTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function itShouldBeWinWhenMatchIsFound()
+    public function itShouldBeWinWhenMatchIsFound(): void
     {
         $game = $this->createCommonGame();
 
@@ -83,7 +83,7 @@ class GameTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function itShouldBeWinWhenLastDropIsAMatch()
+    public function itShouldBeWinWhenLastDropIsAMatch(): void
     {
         $game = $this->create4x4Game();
 
@@ -112,7 +112,7 @@ class GameTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function itShouldExpectOnePlayerAfterAnother()
+    public function itShouldExpectOnePlayerAfterAnother(): void
     {
         $this->expectException(UnexpectedPlayerException::class);
 
@@ -125,7 +125,7 @@ class GameTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function itShouldExpectUniquePlayers()
+    public function itShouldExpectUniquePlayers(): void
     {
         $this->expectException(PlayersNotUniqueException::class);
 
@@ -139,7 +139,7 @@ class GameTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function itShouldExpectPlayerWithDifferentStones()
+    public function itShouldExpectPlayerWithDifferentStones(): void
     {
         $this->expectException(PlayersHaveSameStoneException::class);
 
@@ -153,7 +153,7 @@ class GameTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function itShouldNotBePlayableWhenDraw()
+    public function itShouldNotBePlayableWhenDraw(): void
     {
         $this->expectException(GameFinishedException::class);
 
@@ -173,7 +173,7 @@ class GameTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function itShouldNotBePlayableWhenWin()
+    public function itShouldNotBePlayableWhenWin(): void
     {
         $this->expectException(GameFinishedException::class);
 
@@ -192,7 +192,7 @@ class GameTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function itShouldThrowExceptionIfGivenColumnIsOutOfSize()
+    public function itShouldThrowExceptionIfGivenColumnIsOutOfSize(): void
     {
         $this->expectException(OutOfSizeException::class);
 
@@ -204,7 +204,7 @@ class GameTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function itShouldThrowExceptionIfColumnIsAlreadyFilled()
+    public function itShouldThrowExceptionIfColumnIsAlreadyFilled(): void
     {
         $this->expectException(ColumnAlreadyFilledException::class);
 
