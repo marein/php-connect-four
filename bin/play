@@ -5,6 +5,7 @@ namespace {
 
     use Marein\ConnectFour\Domain\Game\Configuration;
     use Marein\ConnectFour\Domain\Game\Exception\ColumnAlreadyFilledException;
+    use Marein\ConnectFour\Domain\Game\Exception\OutOfSizeException;
     use Marein\ConnectFour\Domain\Game\Game;
     use Marein\ConnectFour\Domain\Game\Player;
     use Marein\ConnectFour\Domain\Game\Stone;
@@ -27,90 +28,91 @@ namespace {
     renderGame($game);
 
     while (!$game->isDraw() && !$game->isWin()) {
-
         consoleMove($game, $player1Id);
         renderGame($game);
 
-        if ($game->isWin()) {
-            break;
+        if (!$game->isWin()) {
+            cpuMove($game, $player2Id);
+            renderGame($game);
         }
-
-        cpuMove($game, $player2Id);
-        renderGame($game);
     }
 
     if ($game->isDraw()) {
-        echo 'Draw.';
+        echo 'Draw';
     } else {
-        if ($game->winner()->id() == $player1Id) {
-            echo 'Player 1 win.';
-        } else {
-            if ($game->winner()->id() == $player2Id) {
-                echo 'Player 2 win';
-            }
-        }
+        echo 'Winner ' . colorizeStoneColor($game->winner()->stone()->color());
     }
 
     echo PHP_EOL . PHP_EOL;
 
-    function renderGame(Game $game)
+    function renderGame(Game $game): void
     {
         // Clear screen
         echo "\033\143" . PHP_EOL;
 
-        // Print header
         $width = $game->configuration()->size()->width();
+        $fillLength = strlen($width);
+        $fillLength = $fillLength % 2 == 0 ? $fillLength + 1 : $fillLength;
+
+        // Print header
         foreach (range(1, $width) as $column) {
-            echo '| ' . $column . ' ' . ($column == $width ? '|' : '');
+            echo sprintf(
+                '| %0' . $fillLength . 'd ',
+                $column
+            );
         }
-        echo PHP_EOL . PHP_EOL;
+        echo '|' . PHP_EOL . PHP_EOL;
 
         // Print fields
         $fields = $game->fields();
-        $width = $game->configuration()->size()->width();
+        $filler = str_repeat(' ', floor($fillLength / 2));
         foreach ($fields as $i => $field) {
-            $colorizedField = str_replace(
-                [Stone::RED, Stone::YELLOW],
-                ["\033[0;31mO\033[0m", "\033[1;33mO\033[0m"],
-                $field
+            echo sprintf(
+                '| %s%s%s %s',
+                $filler,
+                colorizeStoneColor($field),
+                $filler,
+                ($i + 1) % $width == 0 ? '|' . PHP_EOL . PHP_EOL : '' // Line break after each row
             );
-            echo '| ' . $colorizedField . ' ';
-
-            if (($i + 1) % $width == 0) {
-                echo '|' . PHP_EOL . PHP_EOL;
-            }
         }
     }
 
-    function consoleMove(Game $game, string $id)
+    function colorizeStoneColor(string $color): string
     {
-        do {
-            $error = false;
-            do {
-                $column = trim(readline(PHP_EOL . 'Choose your column [1 - 7]: '));
-            } while (!in_array($column, range(1, $game->configuration()->size()->width())));
-            try {
-                $game->move($id, $column);
-            } catch (ColumnAlreadyFilledException $e) {
-                $error = true;
-            }
-        } while ($error);
+        return str_replace(
+            [Stone::RED, Stone::YELLOW],
+            ["\033[0;31mO\033[0m", "\033[1;33mO\033[0m"],
+            $color
+        );
     }
 
-    function cpuMove(Game $game, string $id)
+    function consoleMove(Game $game, string $id): void
     {
-        echo PHP_EOL . 'Waiting for NPC...';
+        $width = $game->configuration()->size()->width();
+
+        try {
+            $column = trim(readline('Choose your column [1 - ' . $width . ']: '));
+            $game->move($id, $column);
+        } catch (OutOfSizeException $e) {
+            consoleMove($game, $id);
+        } catch (ColumnAlreadyFilledException $e) {
+            consoleMove($game, $id);
+        }
+    }
+
+    function cpuMove(Game $game, string $id): void
+    {
+        echo 'Waiting for NPC...';
+
+        $width = $game->configuration()->size()->width();
 
         usleep(0.5 * 1000000);
 
-        do {
-            $error = false;
-            try {
-                $column = rand(1, $game->configuration()->size()->width());
-                $game->move($id, $column);
-            } catch (ColumnAlreadyFilledException $e) {
-                $error = true;
-            }
-        } while ($error);
+        try {
+            $column = rand(1, $width);
+            $game->move($id, $column);
+        } catch (ColumnAlreadyFilledException $e) {
+            cpuMove($game, $id);
+        }
     }
 }
