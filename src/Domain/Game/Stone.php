@@ -7,6 +7,7 @@ namespace Marein\ConnectFour\Domain\Game;
  */
 final class Stone
 {
+    const NONE = 0;
     const RED = 1;
     const YELLOW = 2;
 
@@ -43,6 +44,16 @@ final class Stone
     public static function red(): Stone
     {
         return new self(self::RED);
+    }
+
+    /**
+     * Creates a null [Stone].
+     *
+     * @return Stone
+     */
+    public static function none(): Stone
+    {
+        return new self(self::NONE);
     }
 
     /**

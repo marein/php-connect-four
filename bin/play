@@ -80,8 +80,8 @@ namespace {
     function colorizeStoneColor(string $color): string
     {
         return str_replace(
-            [Stone::RED, Stone::YELLOW],
-            ["\033[0;31mO\033[0m", "\033[1;33mO\033[0m"],
+            [Stone::NONE, Stone::RED, Stone::YELLOW],
+            [' ', "\033[0;31mO\033[0m", "\033[1;33mO\033[0m"],
             $color
         );
     }

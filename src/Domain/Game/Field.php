@@ -20,7 +20,7 @@ final class Field
      * @param Point $point
      * @param Stone $stone
      */
-    private function __construct(Point $point, Stone $stone = null)
+    private function __construct(Point $point, Stone $stone)
     {
         $this->point = $point;
         $this->stone = $stone;
@@ -35,7 +35,7 @@ final class Field
      */
     public static function empty(Point $point): Field
     {
-        return new self($point);
+        return new self($point, Stone::none());
     }
 
     /**
@@ -57,15 +57,15 @@ final class Field
      */
     public function isEmpty(): bool
     {
-        return $this->stone === null;
+        return $this->stone->color() == Stone::NONE;
     }
 
     /**
      * Returns the [Stone] of the [Field].
      *
-     * @return Stone|null
+     * @return Stone
      */
-    public function stone(): ?Stone
+    public function stone(): Stone
     {
         return $this->stone;
     }
@@ -87,10 +87,6 @@ final class Field
      */
     public function __toString(): string
     {
-        if ($this->isEmpty()) {
-            return ' ';
-        }
-
         return (string)$this->stone()->color();
     }
 }

@@ -12,7 +12,6 @@ class FieldTest extends \PHPUnit_Framework_TestCase
         $field = Field::empty(new Point(0, 1));
 
         $this->assertTrue($field->isEmpty());
-        $this->assertNull($field->stone());
     }
 
     /**

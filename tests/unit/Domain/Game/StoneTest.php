@@ -19,4 +19,12 @@ class StoneTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(Stone::yellow()->color(), Stone::YELLOW);
     }
+
+    /**
+     * @test
+     */
+    public function aNoneStoneCanBeCreated(): void
+    {
+        $this->assertEquals(Stone::none()->color(), Stone::NONE);
+    }
 }
