@@ -2,7 +2,9 @@
 
 namespace Marein\ConnectFour\Domain\Game\WinningStrategy;
 
-class CommonWinningStrategyTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class CommonWinningStrategyTest extends TestCase
 {
     /**
      * @test

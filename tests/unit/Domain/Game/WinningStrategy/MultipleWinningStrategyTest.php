@@ -5,8 +5,9 @@ namespace Marein\ConnectFour\Domain\Game\WinningStrategy;
 use Marein\ConnectFour\Domain\Game\Board;
 use Marein\ConnectFour\Domain\Game\Configuration;
 use Marein\ConnectFour\Domain\Game\Size;
+use PHPUnit\Framework\TestCase;
 
-class MultipleWinningStrategyTest extends \PHPUnit_Framework_TestCase
+class MultipleWinningStrategyTest extends TestCase
 {
     /**
      * @test

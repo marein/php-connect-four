@@ -9,8 +9,9 @@ use Marein\ConnectFour\Domain\Game\Exception\PlayersNotUniqueException;
 use Marein\ConnectFour\Domain\Game\Exception\UnexpectedPlayerException;
 use Marein\ConnectFour\Domain\Game\Exception\OutOfSizeException;
 use Marein\ConnectFour\Domain\Game\WinningStrategy\CommonWinningStrategy;
+use PHPUnit\Framework\TestCase;
 
-class GameTest extends \PHPUnit_Framework_TestCase
+class GameTest extends TestCase
 {
     const PLAYER1 = '12345';
     const PLAYER2 = '67890';

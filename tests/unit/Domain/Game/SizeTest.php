@@ -3,8 +3,9 @@
 namespace Marein\ConnectFour\Domain\Game;
 
 use Marein\ConnectFour\Domain\Game\Exception\InvalidSizeException;
+use PHPUnit\Framework\TestCase;
 
-class SizeTest extends \PHPUnit_Framework_TestCase
+class SizeTest extends TestCase
 {
     /**
      * @test
@@ -15,7 +16,9 @@ class SizeTest extends \PHPUnit_Framework_TestCase
      */
     public function itShouldBeCreatedSuccessfully(int $width, int $height): void
     {
-        new Size($width, $height);
+        $size = new Size($width, $height);
+
+        $this->assertTrue($size instanceof Size);
     }
 
     /**

@@ -2,7 +2,9 @@
 
 namespace Marein\ConnectFour\Domain\Game;
 
-class PointTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class PointTest extends TestCase
 {
     /**
      * @test

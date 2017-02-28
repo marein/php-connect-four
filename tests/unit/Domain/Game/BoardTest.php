@@ -2,7 +2,9 @@
 
 namespace Marein\ConnectFour\Domain\Game;
 
-class BoardTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class BoardTest extends TestCase
 {
     /**
      * All the tests of the class game should cover these tests. So check for immutability.

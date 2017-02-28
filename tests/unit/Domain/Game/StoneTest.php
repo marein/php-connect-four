@@ -2,7 +2,9 @@
 
 namespace Marein\ConnectFour\Domain\Game;
 
-class StoneTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class StoneTest extends TestCase
 {
     /**
      * @test

@@ -6,8 +6,9 @@ use Marein\ConnectFour\Domain\Game\Board;
 use Marein\ConnectFour\Domain\Game\Configuration;
 use Marein\ConnectFour\Domain\Game\Size;
 use Marein\ConnectFour\Domain\Game\Stone;
+use PHPUnit\Framework\TestCase;
 
-class VerticalWinningStrategyTest extends \PHPUnit_Framework_TestCase
+class VerticalWinningStrategyTest extends TestCase
 {
     /**
      * @test
