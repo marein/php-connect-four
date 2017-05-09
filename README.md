@@ -4,25 +4,10 @@ This is my implementation of the game "Connect Four" written in PHP. It's fully 
 
 ## Try out
 
-This project can easily be started with [Vagrant](https://www.vagrantup.com) (only tested with Mac OS X). For some reasons you
-don't use Vagrant. Skip to the "Without Vagrant" part then.
-
-### With Vagrant
-
-The project directory in the machine is "/project". Please take a look at the Vagrantfile for further information.
-
-```
-vagrant up
-vagrant ssh
-bin/play
-```
-
-### Without Vagrant
-
 Note that you have to install [Composer](https://getcomposer.org) first.
 
 ```
-cd /path/to/project
+git clone https://github.com/marein/php-connect-four.git && cd php-connect-four
 composer install
 bin/play
 ```
