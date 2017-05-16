@@ -22,10 +22,12 @@ class FieldTest extends TestCase
     public function aStoneCanBePlaced(): void
     {
         $field = Field::empty(new Point(0, 1));
+        $fieldCopy = clone $field;
 
-        $field = $field->placeStone(Stone::red());
+        $fieldWithStone = $field->placeStone(Stone::red());
 
-        $this->assertFalse($field->isEmpty());
-        $this->assertEquals(Stone::red(), $field->stone());
+        $this->assertFalse($fieldWithStone->isEmpty());
+        $this->assertEquals(Stone::red(), $fieldWithStone->stone());
+        $this->assertEquals($field, $fieldCopy);
     }
 }
