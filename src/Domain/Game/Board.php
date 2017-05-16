@@ -64,6 +64,8 @@ final class Board
      * @param int   $column
      *
      * @return Board
+     * @throws ColumnAlreadyFilledException
+     * @throws OutOfSizeException
      */
     public function dropStone(Stone $stone, int $column): Board
     {
