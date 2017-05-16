@@ -14,11 +14,7 @@ class BoardTest extends TestCase
      */
     public function aStoneCanBeDropped(): void
     {
-        $configuration = Configuration::custom(
-            new Size(7, 6),
-            new CommonWinningStrategy()
-        );
-        $board = Board::empty($configuration);
+        $board = $this->createBoard();
         $boardCopy = clone $board;
 
         $boardWithStone = $board->dropStone(Stone::red(), 1);
@@ -43,11 +39,7 @@ class BoardTest extends TestCase
     {
         $this->expectException(ColumnAlreadyFilledException::class);
 
-        $configuration = Configuration::custom(
-            new Size(7, 6),
-            new CommonWinningStrategy()
-        );
-        $board = Board::empty($configuration);
+        $board = $this->createBoard();
 
         $boardWithStone = $board->dropStone(Stone::red(), 1);
         $boardWithStone = $boardWithStone->dropStone(Stone::yellow(), 1);
