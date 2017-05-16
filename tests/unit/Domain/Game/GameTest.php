@@ -2,7 +2,6 @@
 
 namespace Marein\ConnectFour\Domain\Game;
 
-use Marein\ConnectFour\Domain\Game\Exception\ColumnAlreadyFilledException;
 use Marein\ConnectFour\Domain\Game\Exception\GameFinishedException;
 use Marein\ConnectFour\Domain\Game\Exception\PlayersHaveSameStoneException;
 use Marein\ConnectFour\Domain\Game\Exception\PlayersNotUniqueException;
@@ -187,20 +186,6 @@ class GameTest extends TestCase
         $game->move(self::PLAYER2, 3);
         $game->move(self::PLAYER1, 4);
         $game->move(self::PLAYER2, 3);
-    }
-
-    /**
-     * @test
-     */
-    public function itShouldThrowExceptionIfColumnIsAlreadyFilled(): void
-    {
-        $this->expectException(ColumnAlreadyFilledException::class);
-
-        $game = $this->create4x2Game();
-
-        $game->move(self::PLAYER1, 1);
-        $game->move(self::PLAYER2, 1);
-        $game->move(self::PLAYER1, 1);
     }
 
     /**
