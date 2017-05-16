@@ -3,6 +3,7 @@
 namespace Marein\ConnectFour\Domain\Game;
 
 use Marein\ConnectFour\Domain\Game\Exception\ColumnAlreadyFilledException;
+use Marein\ConnectFour\Domain\Game\Exception\OutOfSizeException;
 
 final class Board
 {
@@ -87,11 +88,19 @@ final class Board
      *
      * @return int
      * @throws ColumnAlreadyFilledException
+     * @throws OutOfSizeException
      */
     private function findPositionOfFirstEmptyFieldInColumn(int $column): int
     {
+        /** @var Field[] $fields */
+        $fields = $this->findFieldsByColumn($column);
+
+        if (empty($fields)) {
+            throw new OutOfSizeException();
+        }
+
         /** @var Field[] $reversedFields */
-        $reversedFields = array_reverse($this->findFieldsByColumn($column), true);
+        $reversedFields = array_reverse($fields, true);
 
         foreach ($reversedFields as $position => $field) {
             if ($field->isEmpty()) {

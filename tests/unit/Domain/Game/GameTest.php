@@ -7,7 +7,6 @@ use Marein\ConnectFour\Domain\Game\Exception\GameFinishedException;
 use Marein\ConnectFour\Domain\Game\Exception\PlayersHaveSameStoneException;
 use Marein\ConnectFour\Domain\Game\Exception\PlayersNotUniqueException;
 use Marein\ConnectFour\Domain\Game\Exception\UnexpectedPlayerException;
-use Marein\ConnectFour\Domain\Game\Exception\OutOfSizeException;
 use Marein\ConnectFour\Domain\Game\WinningStrategy\CommonWinningStrategy;
 use PHPUnit\Framework\TestCase;
 
@@ -188,18 +187,6 @@ class GameTest extends TestCase
         $game->move(self::PLAYER2, 3);
         $game->move(self::PLAYER1, 4);
         $game->move(self::PLAYER2, 3);
-    }
-
-    /**
-     * @test
-     */
-    public function itShouldThrowExceptionIfGivenColumnIsOutOfSize(): void
-    {
-        $this->expectException(OutOfSizeException::class);
-
-        $game = $this->create4x2Game();
-
-        $game->move(self::PLAYER1, 5);
     }
 
     /**

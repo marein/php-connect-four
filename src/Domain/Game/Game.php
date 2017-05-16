@@ -94,7 +94,6 @@ class Game
     public function move(string $playerId, int $column): void
     {
         $this->guardGameFinished();
-        $this->guardColumnFitsInSize($column);
         $this->guardExpectedPlayer($playerId);
 
         $this->board = $this->board->dropStone($this->currentPlayer()->stone(), $column);
@@ -175,20 +174,6 @@ class Game
     {
         if ($this->isDraw() || $this->isWin()) {
             throw new GameFinishedException();
-        }
-    }
-
-    /**
-     * Guard that column fits in [Size].
-     *
-     * @param int $column
-     *
-     * @throws OutOfSizeException
-     */
-    private function guardColumnFitsInSize(int $column): void
-    {
-        if ($column > $this->configuration()->size()->width()) {
-            throw new OutOfSizeException();
         }
     }
 

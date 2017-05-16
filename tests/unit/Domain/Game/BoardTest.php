@@ -3,6 +3,7 @@
 namespace Marein\ConnectFour\Domain\Game;
 
 use Marein\ConnectFour\Domain\Game\Exception\ColumnAlreadyFilledException;
+use Marein\ConnectFour\Domain\Game\Exception\OutOfSizeException;
 use Marein\ConnectFour\Domain\Game\WinningStrategy\CommonWinningStrategy;
 use PHPUnit\Framework\TestCase;
 
@@ -55,5 +56,30 @@ class BoardTest extends TestCase
         $boardWithStone = $boardWithStone->dropStone(Stone::red(), 1);
         $boardWithStone = $boardWithStone->dropStone(Stone::red(), 1);
         $boardWithStone->dropStone(Stone::yellow(), 1);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldThrowExceptionIfGivenColumnIsOutOfSize(): void
+    {
+        $this->expectException(OutOfSizeException::class);
+
+        $board = $this->createBoard();
+
+        $board->dropStone(Stone::red(), 8);
+    }
+
+    /**
+     * @return Board
+     */
+    private function createBoard(): Board
+    {
+        return Board::empty(
+            Configuration::custom(
+                new Size(7, 6),
+                new CommonWinningStrategy()
+            )
+        );
     }
 }
