@@ -25,7 +25,7 @@ final class DiagonalWinningStrategy implements WinningStrategy
      */
     public function __construct(int $numberOfRequiredMatches)
     {
-        if ($numberOfRequiredMatches < 4) {
+        if ($numberOfRequiredMatches < self::MINIMUM) {
             throw new InvalidNumberOfRequiredMatchesException('The value must be at least ' . self::MINIMUM . '.');
         }
 
