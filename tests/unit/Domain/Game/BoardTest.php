@@ -12,6 +12,31 @@ class BoardTest extends TestCase
     /**
      * @test
      */
+    public function itShouldBeCreatedWithEmptyFields(): void
+    {
+        $board = $this->createBoard();
+
+        $filtered = array_filter($board->fields(), function ($field) {
+            /** @var Field $field */
+            return !$field->isEmpty();
+        });
+
+        $this->assertCount(0, $filtered);
+    }
+
+    /**
+     * @test
+     */
+    public function itFieldCountShouldBeTheProductOfSize(): void
+    {
+        $board = $this->createBoard();
+
+        $this->assertCount(42, $board->fields());
+    }
+
+    /**
+     * @test
+     */
     public function aStoneCanBeDropped(): void
     {
         $board = $this->createBoard();

@@ -17,31 +17,6 @@ class GameTest extends TestCase
     /**
      * @test
      */
-    public function itShouldBeCreatedWithEmptyFields(): void
-    {
-        $game = $this->create4x4Game();
-
-        $filtered = array_filter($game->fields(), function ($field) {
-            /** @var Field $field */
-            return !$field->isEmpty();
-        });
-
-        $this->assertCount(0, $filtered);
-    }
-
-    /**
-     * @test
-     */
-    public function itFieldCountShouldBeTheProductOfSize(): void
-    {
-        $game = $this->createCommonGame();
-
-        $this->assertCount(42, $game->fields());
-    }
-
-    /**
-     * @test
-     */
     public function itShouldBeDrawWhenNoMatchIsFoundAndAllFieldsAreFilled(): void
     {
         $game = $this->create2x4Game();
