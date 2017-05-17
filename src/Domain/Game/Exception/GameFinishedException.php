@@ -2,7 +2,7 @@
 
 namespace Marein\ConnectFour\Domain\Game\Exception;
 
-class GameFinishedException extends \Exception
+class GameFinishedException extends GameException
 {
 
 }
