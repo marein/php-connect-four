@@ -44,9 +44,13 @@ final class Board
     {
         $fields = [];
 
-        for ($y = 0; $y < $configuration->size()->height(); $y++) {
-            for ($x = 0; $x < $configuration->size()->width(); $x++) {
-                $fields[] = Field::empty(new Point($x + 1, $y + 1));
+        $size = $configuration->size();
+        $height = $size->height();
+        $width = $size->width();
+
+        for ($y = 1; $y <= $height; $y++) {
+            for ($x = 1; $x <= $width; $x++) {
+                $fields[] = Field::empty(new Point($x, $y));
             }
         }
 
