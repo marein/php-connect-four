@@ -15,14 +15,17 @@ class DiagonalWinningStrategyTest extends TestCase
      */
     public function itShouldCalculateForWin(): void
     {
+        $size = new Size(7, 6);
+        $diagonalWinningStrategy = new DiagonalWinningStrategy(4);
+
         $configuration = Configuration::custom(
-            new Size(7, 6),
-            new DiagonalWinningStrategy(4)
+            $size,
+            $diagonalWinningStrategy
         );
 
-        $board = Board::empty($configuration);
+        $board = Board::empty($size);
 
-        $this->assertFalse($configuration->winningStrategy()->calculate(
+        $this->assertFalse($diagonalWinningStrategy->calculate(
             $configuration,
             $board
         ));
@@ -43,19 +46,19 @@ class DiagonalWinningStrategyTest extends TestCase
         $board = $board->dropStone(Stone::red(), 4);
         $board = $board->dropStone(Stone::red(), 4);
 
-        $this->assertFalse($configuration->winningStrategy()->calculate(
+        $this->assertFalse($diagonalWinningStrategy->calculate(
             $configuration,
             $board
         ));
 
         $board = $board->dropStone(Stone::red(), 4);
 
-        $this->assertTrue($configuration->winningStrategy()->calculate(
+        $this->assertTrue($diagonalWinningStrategy->calculate(
             $configuration,
             $board
         ));
 
-        $board = Board::empty($configuration);
+        $board = Board::empty($size);
 
         /**
          * \
@@ -73,14 +76,14 @@ class DiagonalWinningStrategyTest extends TestCase
         $board = $board->dropStone(Stone::red(), 4);
         $board = $board->dropStone(Stone::red(), 4);
 
-        $this->assertFalse($configuration->winningStrategy()->calculate(
+        $this->assertFalse($diagonalWinningStrategy->calculate(
             $configuration,
             $board
         ));
 
         $board = $board->dropStone(Stone::red(), 4);
 
-        $this->assertTrue($configuration->winningStrategy()->calculate(
+        $this->assertTrue($diagonalWinningStrategy->calculate(
             $configuration,
             $board
         ));

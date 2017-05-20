@@ -15,14 +15,17 @@ class HorizontalWinningStrategyTest extends TestCase
      */
     public function itShouldCalculateForWin(): void
     {
+        $size = new Size(7, 6);
+        $horizontalWinningStrategy = new HorizontalWinningStrategy(4);
+
         $configuration = Configuration::custom(
-            new Size(7, 6),
-            new HorizontalWinningStrategy(4)
+            $size,
+            $horizontalWinningStrategy
         );
 
-        $board = Board::empty($configuration);
+        $board = Board::empty($size);
 
-        $this->assertFalse($configuration->winningStrategy()->calculate(
+        $this->assertFalse($horizontalWinningStrategy->calculate(
             $configuration,
             $board
         ));
@@ -31,14 +34,14 @@ class HorizontalWinningStrategyTest extends TestCase
         $board = $board->dropStone(Stone::red(), 2);
         $board = $board->dropStone(Stone::red(), 3);
 
-        $this->assertFalse($configuration->winningStrategy()->calculate(
+        $this->assertFalse($horizontalWinningStrategy->calculate(
             $configuration,
             $board
         ));
 
         $board = $board->dropStone(Stone::red(), 4);
 
-        $this->assertTrue($configuration->winningStrategy()->calculate(
+        $this->assertTrue($horizontalWinningStrategy->calculate(
             $configuration,
             $board
         ));

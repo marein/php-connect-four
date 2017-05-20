@@ -4,7 +4,6 @@ namespace Marein\ConnectFour\Domain\Game;
 
 use Marein\ConnectFour\Domain\Game\Exception\ColumnAlreadyFilledException;
 use Marein\ConnectFour\Domain\Game\Exception\OutOfSizeException;
-use Marein\ConnectFour\Domain\Game\WinningStrategy\CommonWinningStrategy;
 use PHPUnit\Framework\TestCase;
 
 class BoardTest extends TestCase
@@ -92,11 +91,8 @@ class BoardTest extends TestCase
      */
     private function createBoard(): Board
     {
-        return Board::empty(
-            Configuration::custom(
-                new Size(7, 6),
-                new CommonWinningStrategy()
-            )
-        );
+        $size = new Size(7, 6);
+
+        return Board::empty($size);
     }
 }

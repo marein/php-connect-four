@@ -14,12 +14,15 @@ class MultipleWinningStrategyTest extends TestCase
      */
     public function itShouldCalculateForWin(): void
     {
+        $size = new Size(7, 6);
+        $multipleWinningStrategy = new MultipleWinningStrategies([]);
+
         $configuration = Configuration::custom(
-            new Size(7, 6),
-            new MultipleWinningStrategies([])
+            $size,
+            $multipleWinningStrategy
         );
 
-        $board = Board::empty($configuration);
+        $board = Board::empty($size);
 
         $first = $this->createMock(WinningStrategy::class);
         $first->method('calculate')->willReturn(false);

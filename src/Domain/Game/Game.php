@@ -53,7 +53,7 @@ class Game
 
         $this->configuration = $configuration;
         $this->numberOfMoves = 0;
-        $this->board = Board::empty($configuration);
+        $this->board = Board::empty($configuration->size());
         $this->players = [$player1, $player2];
         $this->winner = null;
     }

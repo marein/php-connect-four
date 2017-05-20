@@ -36,15 +36,14 @@ final class Board
     /**
      * Create an empty [Board].
      *
-     * @param Configuration $configuration
+     * @param Size $size
      *
      * @return Board
      */
-    public static function empty(Configuration $configuration): Board
+    public static function empty(Size $size): Board
     {
         $fields = [];
 
-        $size = $configuration->size();
         $height = $size->height();
         $width = $size->width();
 
