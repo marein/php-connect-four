@@ -88,6 +88,65 @@ class BoardTest extends TestCase
 
     /**
      * @test
+     * @dataProvider columnProvider
+     *
+     * @param int     $column
+     * @param Field[] $expectedFields
+     */
+    public function itShouldFindFieldsByColumn(int $column, array $expectedFields): void
+    {
+        $board = $this->createBoard();
+
+        $this->assertEquals(
+            $board->findFieldsByColumn($column),
+            $expectedFields
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function columnProvider(): array
+    {
+        return [
+            [
+                1,
+                [
+                    Field::empty(new Point(1, 1)),
+                    Field::empty(new Point(1, 2)),
+                    Field::empty(new Point(1, 3)),
+                    Field::empty(new Point(1, 4)),
+                    Field::empty(new Point(1, 5)),
+                    Field::empty(new Point(1, 6))
+                ]
+            ],
+            [
+                5,
+                [
+                    Field::empty(new Point(5, 1)),
+                    Field::empty(new Point(5, 2)),
+                    Field::empty(new Point(5, 3)),
+                    Field::empty(new Point(5, 4)),
+                    Field::empty(new Point(5, 5)),
+                    Field::empty(new Point(5, 6))
+                ]
+            ],
+            [
+                7,
+                [
+                    Field::empty(new Point(7, 1)),
+                    Field::empty(new Point(7, 2)),
+                    Field::empty(new Point(7, 3)),
+                    Field::empty(new Point(7, 4)),
+                    Field::empty(new Point(7, 5)),
+                    Field::empty(new Point(7, 6))
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * @test
      * @dataProvider mainDiagonalProvider
      *
      * @param Point   $point
