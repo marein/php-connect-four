@@ -259,6 +259,16 @@ final class Board
      *************************************************************/
 
     /**
+     * Returns the [Size] of the [Board].
+     *
+     * @return Size
+     */
+    public function size(): Size
+    {
+        return $this->size;
+    }
+
+    /**
      * Returns the [Field]s of the [Game].
      *
      * @return Field[]
