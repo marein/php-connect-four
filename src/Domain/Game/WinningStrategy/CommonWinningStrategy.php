@@ -3,7 +3,6 @@
 namespace Marein\ConnectFour\Domain\Game\WinningStrategy;
 
 use Marein\ConnectFour\Domain\Game\Board;
-use Marein\ConnectFour\Domain\Game\Configuration;
 
 final class CommonWinningStrategy implements WinningStrategy
 {
@@ -27,8 +26,8 @@ final class CommonWinningStrategy implements WinningStrategy
     /**
      * @inheritdoc
      */
-    public function calculate(Configuration $configuration, Board $board): bool
+    public function calculate(Board $board): bool
     {
-        return $this->winningStrategy->calculate($configuration, $board);
+        return $this->winningStrategy->calculate($board);
     }
 }

@@ -3,7 +3,6 @@
 namespace Marein\ConnectFour\Domain\Game\WinningStrategy;
 
 use Marein\ConnectFour\Domain\Game\Board;
-use Marein\ConnectFour\Domain\Game\Configuration;
 use Marein\ConnectFour\Domain\Game\Size;
 use PHPUnit\Framework\TestCase;
 
@@ -15,13 +14,6 @@ class MultipleWinningStrategyTest extends TestCase
     public function itShouldCalculateForWin(): void
     {
         $size = new Size(7, 6);
-        $multipleWinningStrategy = new MultipleWinningStrategies([]);
-
-        $configuration = Configuration::custom(
-            $size,
-            $multipleWinningStrategy
-        );
-
         $board = Board::empty($size);
 
         $first = $this->createMock(WinningStrategy::class);
@@ -32,7 +24,7 @@ class MultipleWinningStrategyTest extends TestCase
 
         $strategy = new MultipleWinningStrategies([$first, $second]);
 
-        $this->assertFalse($strategy->calculate($configuration, $board));
+        $this->assertFalse($strategy->calculate($board));
 
         $first = $this->createMock(WinningStrategy::class);
         $first->method('calculate')->willReturn(true);
@@ -42,6 +34,6 @@ class MultipleWinningStrategyTest extends TestCase
 
         $strategy = new MultipleWinningStrategies([$first, $second]);
 
-        $this->assertTrue($strategy->calculate($configuration, $board));
+        $this->assertTrue($strategy->calculate($board));
     }
 }

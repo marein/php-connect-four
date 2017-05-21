@@ -3,7 +3,6 @@
 namespace Marein\ConnectFour\Domain\Game\WinningStrategy;
 
 use Marein\ConnectFour\Domain\Game\Board;
-use Marein\ConnectFour\Domain\Game\Configuration;
 use Marein\ConnectFour\Domain\Game\Size;
 use Marein\ConnectFour\Domain\Game\Stone;
 use PHPUnit\Framework\TestCase;
@@ -16,19 +15,10 @@ class DiagonalWinningStrategyTest extends TestCase
     public function itShouldCalculateForWin(): void
     {
         $size = new Size(7, 6);
+        $board = Board::empty($size);
         $diagonalWinningStrategy = new DiagonalWinningStrategy(4);
 
-        $configuration = Configuration::custom(
-            $size,
-            $diagonalWinningStrategy
-        );
-
-        $board = Board::empty($size);
-
-        $this->assertFalse($diagonalWinningStrategy->calculate(
-            $configuration,
-            $board
-        ));
+        $this->assertFalse($diagonalWinningStrategy->calculate($board));
 
         /**
          *    /
@@ -46,17 +36,11 @@ class DiagonalWinningStrategyTest extends TestCase
         $board = $board->dropStone(Stone::red(), 4);
         $board = $board->dropStone(Stone::red(), 4);
 
-        $this->assertFalse($diagonalWinningStrategy->calculate(
-            $configuration,
-            $board
-        ));
+        $this->assertFalse($diagonalWinningStrategy->calculate($board));
 
         $board = $board->dropStone(Stone::red(), 4);
 
-        $this->assertTrue($diagonalWinningStrategy->calculate(
-            $configuration,
-            $board
-        ));
+        $this->assertTrue($diagonalWinningStrategy->calculate($board));
 
         $board = Board::empty($size);
 
@@ -76,16 +60,10 @@ class DiagonalWinningStrategyTest extends TestCase
         $board = $board->dropStone(Stone::red(), 4);
         $board = $board->dropStone(Stone::red(), 4);
 
-        $this->assertFalse($diagonalWinningStrategy->calculate(
-            $configuration,
-            $board
-        ));
+        $this->assertFalse($diagonalWinningStrategy->calculate($board));
 
         $board = $board->dropStone(Stone::red(), 4);
 
-        $this->assertTrue($diagonalWinningStrategy->calculate(
-            $configuration,
-            $board
-        ));
+        $this->assertTrue($diagonalWinningStrategy->calculate($board));
     }
 }

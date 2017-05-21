@@ -3,7 +3,6 @@
 namespace Marein\ConnectFour\Domain\Game\WinningStrategy;
 
 use Marein\ConnectFour\Domain\Game\Board;
-use Marein\ConnectFour\Domain\Game\Configuration;
 use Marein\ConnectFour\Domain\Game\Exception\InvalidNumberOfRequiredMatchesException;
 
 final class HorizontalWinningStrategy implements WinningStrategy
@@ -34,7 +33,7 @@ final class HorizontalWinningStrategy implements WinningStrategy
     /**
      * @inheritdoc
      */
-    public function calculate(Configuration $configuration, Board $board): bool
+    public function calculate(Board $board): bool
     {
         if (!$board->lastUsedField()) {
             return false;
