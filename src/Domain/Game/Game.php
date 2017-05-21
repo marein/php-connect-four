@@ -192,13 +192,13 @@ class Game
     }
 
     /**
-     * Returns the [Field]s of the [Game].
+     * Returns the [Board] of the [Game].
      *
-     * @return Field[]
+     * @return Board
      */
-    public function fields(): array
+    public function board(): Board
     {
-        return $this->board->fields();
+        return $this->board;
     }
 
     /**

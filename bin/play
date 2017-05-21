@@ -64,7 +64,7 @@ namespace {
         echo '|' . PHP_EOL . PHP_EOL;
 
         // Print fields
-        $fields = $game->fields();
+        $fields = $game->board()->fields();
         $filler = str_repeat(' ', (int)floor($fillLength / 2));
         foreach ($fields as $i => $field) {
             echo sprintf(
