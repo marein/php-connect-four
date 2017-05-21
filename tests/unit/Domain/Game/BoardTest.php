@@ -14,24 +14,20 @@ class BoardTest extends TestCase
     public function itShouldBeCreatedWithEmptyFields(): void
     {
         $board = $this->createBoard();
+        $size = new Size(7, 6);
 
-        $filtered = array_filter($board->fields(), function ($field) {
-            /** @var Field $field */
-            return !$field->isEmpty();
+        $countOfFields = $size->width() * $size->height();
+        $emptyFields = array_filter($board->fields(), function (Field $field) {
+            return $field->isEmpty();
         });
 
-        $this->assertCount(0, $filtered);
+        $this->assertCount($countOfFields, $emptyFields);
         $this->assertEquals(null, $board->lastUsedField());
-    }
-
-    /**
-     * @test
-     */
-    public function itFieldCountShouldBeTheProductOfSize(): void
-    {
-        $board = $this->createBoard();
-
-        $this->assertCount(42, $board->fields());
+        $this->assertEquals($size, $board->size());
+        $this->assertCount(
+            $countOfFields,
+            $board->fields()
+        );
     }
 
     /**
