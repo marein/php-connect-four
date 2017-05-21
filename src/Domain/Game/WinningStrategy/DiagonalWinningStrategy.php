@@ -44,12 +44,8 @@ final class DiagonalWinningStrategy implements WinningStrategy
         $stone = $board->lastUsedField()->stone();
         $point = $board->lastUsedField()->point();
 
-        $fields1 = $board->findFieldsByPoints(
-            Point::createPointsInDiagonalDown($point, $configuration->size())
-        );
-        $fields2 = $board->findFieldsByPoints(
-            Point::createPointsInDiagonalUp($point, $configuration->size())
-        );
+        $fields1 = $board->findFieldsInMainDiagonalByPoint($point);
+        $fields2 = $board->findFieldsInCounterDiagonalByPoint($point);
 
         // Create a string representation of fields e.g. "000121 000121"
         $haystack = implode($fields1) . ' ' . implode($fields2);

@@ -8,6 +8,11 @@ use Marein\ConnectFour\Domain\Game\Exception\OutOfSizeException;
 final class Board
 {
     /**
+     * @var Size
+     */
+    private $size;
+
+    /**
      * @var Field[]
      */
     private $fields;
@@ -20,11 +25,13 @@ final class Board
     /**
      * Board constructor.
      *
+     * @param Size       $size
      * @param Field[]    $fields
      * @param Field|null $lastUsedField
      */
-    private function __construct(array $fields, Field $lastUsedField = null)
+    private function __construct(Size $size, array $fields, Field $lastUsedField = null)
     {
+        $this->size = $size;
         $this->fields = $fields;
         $this->lastUsedField = $lastUsedField;
     }
@@ -53,7 +60,10 @@ final class Board
             }
         }
 
-        return new self($fields);
+        return new self(
+            $size,
+            $fields
+        );
     }
 
     /*************************************************************
@@ -79,7 +89,11 @@ final class Board
         $field = &$fields[$firstEmptyFieldPosition];
         $field = $field->placeStone($stone);
 
-        return new self($fields, $field);
+        return new self(
+            $this->size,
+            $fields,
+            $field
+        );
     }
 
     /*************************************************************
@@ -142,6 +156,70 @@ final class Board
         return array_filter($this->fields, function (Field $field) use ($row) {
             return $field->point()->y() == $row;
         });
+    }
+
+    /**
+     * \
+     *  \
+     *   \
+     *    \
+     * Find [Field]s in main diagonal.
+     *
+     * @param Point $fromPoint
+     *
+     * @return Field[]
+     */
+    public function findFieldsInMainDiagonalByPoint(Point $fromPoint): array
+    {
+        $points = [];
+
+        $leastDifferenceToBorder = min($fromPoint->x(), $fromPoint->y()) - 1;
+        $xAtBorder = $fromPoint->x() - $leastDifferenceToBorder;
+        $yAtBorder = $fromPoint->y() - $leastDifferenceToBorder;
+
+        $width = $this->size->width();
+        $height = $this->size->height();
+
+        for ($x = $xAtBorder, $y = $yAtBorder; $x <= $width && $y <= $height; $x++, $y++) {
+            $points[] = new Point($x, $y);
+        }
+
+        $fields = $this->findFieldsByPoints($points);
+
+        return $fields;
+    }
+
+    /**
+     *    /
+     *   /
+     *  /
+     * /
+     * Find [Field]s in counter diagonal.
+     *
+     * @param Point $fromPoint
+     *
+     * @return Field[]
+     */
+    public function findFieldsInCounterDiagonalByPoint(Point $fromPoint): array
+    {
+        $points = [];
+
+        $verticalDifferenceToBorder = $fromPoint->x() - 1;
+        $horizontalDifferenceToBorder = -($fromPoint->y() - $this->size->height());
+
+        $leastDifferenceToBorder = min($verticalDifferenceToBorder, $horizontalDifferenceToBorder);
+        $xAtBorder = $fromPoint->x() - $leastDifferenceToBorder;
+        $yAtBorder = $fromPoint->y() + $leastDifferenceToBorder;
+
+        $width = $this->size->width();
+
+        for ($x = $xAtBorder, $y = $yAtBorder; $x <= $width && $y > 0; $x++, $y--) {
+            $points[] = new Point($x, $y);
+        }
+
+        $fields = $this->findFieldsByPoints($points);
+
+        return $fields;
     }
 
     /**

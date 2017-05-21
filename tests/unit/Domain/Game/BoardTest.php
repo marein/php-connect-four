@@ -87,6 +87,124 @@ class BoardTest extends TestCase
     }
 
     /**
+     * @test
+     * @dataProvider mainDiagonalProvider
+     *
+     * @param Point   $point
+     * @param Field[] $expectedFields
+     */
+    public function itShouldFindFieldsInMainDiagonal(Point $point, array $expectedFields): void
+    {
+        $board = $this->createBoard();
+
+        // Call array_values for re-index
+        $this->assertEquals(
+            array_values($board->findFieldsInMainDiagonalByPoint($point)),
+            $expectedFields
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function mainDiagonalProvider(): array
+    {
+        return [
+            [
+                new Point(3, 2),
+                [
+                    Field::empty(new Point(2, 1)),
+                    Field::empty(new Point(3, 2)),
+                    Field::empty(new Point(4, 3)),
+                    Field::empty(new Point(5, 4)),
+                    Field::empty(new Point(6, 5)),
+                    Field::empty(new Point(7, 6))
+                ]
+            ],
+            [
+                new Point(5, 3),
+                [
+                    Field::empty(new Point(3, 1)),
+                    Field::empty(new Point(4, 2)),
+                    Field::empty(new Point(5, 3)),
+                    Field::empty(new Point(6, 4)),
+                    Field::empty(new Point(7, 5))
+                ]
+            ],
+            [
+                new Point(5, 5),
+                [
+                    Field::empty(new Point(1, 1)),
+                    Field::empty(new Point(2, 2)),
+                    Field::empty(new Point(3, 3)),
+                    Field::empty(new Point(4, 4)),
+                    Field::empty(new Point(5, 5)),
+                    Field::empty(new Point(6, 6))
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider counterDiagonalProvider
+     *
+     * @param Point   $point
+     * @param Field[] $expectedFields
+     */
+    public function itShouldFindFieldsInCounterDiagonal(Point $point, array $expectedFields): void
+    {
+        $board = $this->createBoard();
+
+        // Call array_values for re-index
+        $this->assertEquals(
+            array_values($board->findFieldsInCounterDiagonalByPoint($point)),
+            $expectedFields
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function counterDiagonalProvider(): array
+    {
+        return [
+            [
+                new Point(5, 4),
+                [
+                    Field::empty(new Point(7, 2)),
+                    Field::empty(new Point(6, 3)),
+                    Field::empty(new Point(5, 4)),
+                    Field::empty(new Point(4, 5)),
+                    Field::empty(new Point(3, 6))
+                ]
+            ],
+            [
+                new Point(3, 4),
+                [
+                    Field::empty(new Point(6, 1)),
+                    Field::empty(new Point(5, 2)),
+                    Field::empty(new Point(4, 3)),
+                    Field::empty(new Point(3, 4)),
+                    Field::empty(new Point(2, 5)),
+                    Field::empty(new Point(1, 6))
+                ]
+            ],
+            [
+                new Point(5, 3),
+                [
+                    Field::empty(new Point(7, 1)),
+                    Field::empty(new Point(6, 2)),
+                    Field::empty(new Point(5, 3)),
+                    Field::empty(new Point(4, 4)),
+                    Field::empty(new Point(3, 5)),
+                    Field::empty(new Point(2, 6))
+                ]
+            ]
+        ];
+    }
+
+    /**
      * @return Board
      */
     private function createBoard(): Board
