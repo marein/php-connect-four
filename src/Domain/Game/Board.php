@@ -136,9 +136,15 @@ final class Board
      */
     public function findFieldsByColumn(int $column): array
     {
-        return array_filter($this->fields, function (Field $field) use ($column) {
-            return $field->point()->x() == $column;
-        });
+        $fields = [];
+
+        foreach ($this->fields as $field) {
+            if ($field->point()->x() == $column) {
+                $fields[] = $field;
+            }
+        }
+
+        return $fields;
     }
 
     /**
