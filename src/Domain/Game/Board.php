@@ -82,11 +82,11 @@ final class Board
      */
     public function dropStone(Stone $stone, int $column): Board
     {
-        $firstEmptyFieldPosition = $this->findPositionOfFirstEmptyFieldInColumn($column);
+        $positionOfFirstEmptyField = $this->findPositionOfFirstEmptyFieldInColumn($column);
 
         $fields = $this->fields;
 
-        $field = &$fields[$firstEmptyFieldPosition];
+        $field = &$fields[$positionOfFirstEmptyField];
         $field = $field->placeStone($stone);
 
         return new self(
@@ -111,18 +111,15 @@ final class Board
      */
     private function findPositionOfFirstEmptyFieldInColumn(int $column): int
     {
-        /** @var Field[] $fields */
-        $fields = $this->findFieldsByColumn($column);
-
-        if (empty($fields)) {
+        if ($column > $this->size->width() || $column < 1) {
             throw new OutOfSizeException();
         }
 
         /** @var Field[] $reversedFields */
-        $reversedFields = array_reverse($fields, true);
+        $reversedFields = array_reverse($this->fields, true);
 
         foreach ($reversedFields as $position => $field) {
-            if ($field->isEmpty()) {
+            if ($field->point()->x() == $column && $field->isEmpty()) {
                 return $position;
             }
         }
