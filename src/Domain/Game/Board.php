@@ -238,7 +238,7 @@ final class Board
      *
      * @return Field[]
      */
-    public function findFieldsByPoints(array $points): array
+    private function findFieldsByPoints(array $points): array
     {
         $fields = [];
 

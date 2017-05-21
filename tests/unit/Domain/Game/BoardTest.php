@@ -42,15 +42,11 @@ class BoardTest extends TestCase
         $boardCopy = clone $board;
 
         $boardWithStone = $board->dropStone(Stone::red(), 1);
-        $expectedPoint = new Point(1, 6);
-        $fields = $boardWithStone->findFieldsByPoints([$expectedPoint]);
-        $affectedField = array_pop($fields);
+        $affectedField = $boardWithStone->fields()[35];
         $this->assertEquals(Stone::red(), $affectedField->stone());
 
         $boardWithStone = $boardWithStone->dropStone(Stone::yellow(), 1);
-        $expectedPoint = new Point(1, 5);
-        $fields = $boardWithStone->findFieldsByPoints([$expectedPoint]);
-        $affectedField = array_pop($fields);
+        $affectedField = $boardWithStone->fields()[28];
         $this->assertEquals(Stone::yellow(), $affectedField->stone());
 
         $this->assertEquals($board, $boardCopy);
