@@ -97,9 +97,8 @@ class BoardTest extends TestCase
     {
         $board = $this->createBoard();
 
-        // Call array_values for re-index
         $this->assertEquals(
-            array_values($board->findFieldsInMainDiagonalByPoint($point)),
+            $board->findFieldsInMainDiagonalByPoint($point),
             $expectedFields
         );
     }
@@ -156,9 +155,8 @@ class BoardTest extends TestCase
     {
         $board = $this->createBoard();
 
-        // Call array_values for re-index
         $this->assertEquals(
-            array_values($board->findFieldsInCounterDiagonalByPoint($point)),
+            $board->findFieldsInCounterDiagonalByPoint($point),
             $expectedFields
         );
     }
@@ -172,33 +170,33 @@ class BoardTest extends TestCase
             [
                 new Point(5, 4),
                 [
-                    Field::empty(new Point(7, 2)),
-                    Field::empty(new Point(6, 3)),
-                    Field::empty(new Point(5, 4)),
+                    Field::empty(new Point(3, 6)),
                     Field::empty(new Point(4, 5)),
-                    Field::empty(new Point(3, 6))
+                    Field::empty(new Point(5, 4)),
+                    Field::empty(new Point(6, 3)),
+                    Field::empty(new Point(7, 2))
                 ]
             ],
             [
                 new Point(3, 4),
                 [
-                    Field::empty(new Point(6, 1)),
-                    Field::empty(new Point(5, 2)),
-                    Field::empty(new Point(4, 3)),
-                    Field::empty(new Point(3, 4)),
+                    Field::empty(new Point(1, 6)),
                     Field::empty(new Point(2, 5)),
-                    Field::empty(new Point(1, 6))
+                    Field::empty(new Point(3, 4)),
+                    Field::empty(new Point(4, 3)),
+                    Field::empty(new Point(5, 2)),
+                    Field::empty(new Point(6, 1))
                 ]
             ],
             [
                 new Point(5, 3),
                 [
-                    Field::empty(new Point(7, 1)),
-                    Field::empty(new Point(6, 2)),
-                    Field::empty(new Point(5, 3)),
-                    Field::empty(new Point(4, 4)),
+                    Field::empty(new Point(2, 6)),
                     Field::empty(new Point(3, 5)),
-                    Field::empty(new Point(2, 6))
+                    Field::empty(new Point(4, 4)),
+                    Field::empty(new Point(5, 3)),
+                    Field::empty(new Point(6, 2)),
+                    Field::empty(new Point(7, 1))
                 ]
             ]
         ];

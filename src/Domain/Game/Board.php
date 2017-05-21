@@ -231,9 +231,18 @@ final class Board
      */
     public function findFieldsByPoints(array $points): array
     {
-        return array_filter($this->fields, function (Field $field) use ($points) {
-            return in_array($field->point(), $points);
-        });
+        $fields = [];
+
+        foreach ($points as $point) {
+            foreach ($this->fields as $field) {
+                if ($field->point() == $point) {
+                    $fields[] = $field;
+                    break;
+                }
+            }
+        }
+
+        return $fields;
     }
 
     /*************************************************************
