@@ -21,6 +21,7 @@ class BoardTest extends TestCase
         });
 
         $this->assertCount(0, $filtered);
+        $this->assertEquals(null, $board->lastUsedField());
     }
 
     /**
@@ -44,10 +45,12 @@ class BoardTest extends TestCase
         $boardWithStone = $board->dropStone(Stone::red(), 1);
         $affectedField = $boardWithStone->fields()[35];
         $this->assertEquals(Stone::red(), $affectedField->stone());
+        $this->assertEquals($affectedField, $boardWithStone->lastUsedField());
 
         $boardWithStone = $boardWithStone->dropStone(Stone::yellow(), 1);
         $affectedField = $boardWithStone->fields()[28];
         $this->assertEquals(Stone::yellow(), $affectedField->stone());
+        $this->assertEquals($affectedField, $boardWithStone->lastUsedField());
 
         $this->assertEquals($board, $boardCopy);
     }
