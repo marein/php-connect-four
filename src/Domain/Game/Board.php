@@ -156,9 +156,15 @@ final class Board
      */
     public function findFieldsByRow(int $row): array
     {
-        return array_filter($this->fields, function (Field $field) use ($row) {
-            return $field->point()->y() == $row;
-        });
+        $fields = [];
+
+        foreach ($this->fields as $field) {
+            if ($field->point()->y() == $row) {
+                $fields[] = $field;
+            }
+        }
+
+        return $fields;
     }
 
     /**
