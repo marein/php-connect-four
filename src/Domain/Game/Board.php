@@ -101,7 +101,7 @@ final class Board
      *************************************************************/
 
     /**
-     * Find first empty field [Field] in column.
+     * Find position of first empty [Field] in column.
      *
      * @param int $column
      *
@@ -269,7 +269,7 @@ final class Board
     }
 
     /**
-     * Returns the [Field]s of the [Game].
+     * Returns the [Field]s of the [Board].
      *
      * @return Field[]
      */
