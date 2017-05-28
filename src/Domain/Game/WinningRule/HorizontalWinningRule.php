@@ -1,11 +1,11 @@
 <?php
 
-namespace Marein\ConnectFour\Domain\Game\WinningStrategy;
+namespace Marein\ConnectFour\Domain\Game\WinningRule;
 
 use Marein\ConnectFour\Domain\Game\Board;
 use Marein\ConnectFour\Domain\Game\Exception\InvalidNumberOfRequiredMatchesException;
 
-final class VerticalWinningStrategy implements WinningStrategy
+final class HorizontalWinningRule implements WinningRule
 {
     const MINIMUM = 4;
 
@@ -15,7 +15,7 @@ final class VerticalWinningStrategy implements WinningStrategy
     private $numberOfRequiredMatches;
 
     /**
-     * VerticalWinningStrategy constructor.
+     * HorizontalWinningRule constructor.
      *
      * @param int $numberOfRequiredMatches
      *
@@ -43,7 +43,7 @@ final class VerticalWinningStrategy implements WinningStrategy
         $point = $board->lastUsedField()->point();
 
         // Create a string representation of fields e.g. "000121"
-        $haystack = implode($board->findFieldsByColumn($point->x()));
+        $haystack = implode($board->findFieldsByRow($point->y()));
         // Create a string like "1111|2222" depending on the stone and the required matches.
         $needle = str_repeat((string)$stone->color(), $this->numberOfRequiredMatches);
 

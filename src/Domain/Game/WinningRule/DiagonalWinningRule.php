@@ -1,11 +1,11 @@
 <?php
 
-namespace Marein\ConnectFour\Domain\Game\WinningStrategy;
+namespace Marein\ConnectFour\Domain\Game\WinningRule;
 
 use Marein\ConnectFour\Domain\Game\Board;
 use Marein\ConnectFour\Domain\Game\Exception\InvalidNumberOfRequiredMatchesException;
 
-final class DiagonalWinningStrategy implements WinningStrategy
+final class DiagonalWinningRule implements WinningRule
 {
     const MINIMUM = 4;
 
@@ -15,7 +15,7 @@ final class DiagonalWinningStrategy implements WinningStrategy
     private $numberOfRequiredMatches;
 
     /**
-     * DiagonalWinningStrategy constructor.
+     * DiagonalWinningRule constructor.
      *
      * @param int $numberOfRequiredMatches
      *

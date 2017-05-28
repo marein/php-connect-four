@@ -2,8 +2,8 @@
 
 namespace Marein\ConnectFour\Domain\Game;
 
-use Marein\ConnectFour\Domain\Game\WinningStrategy\CommonWinningStrategy;
-use Marein\ConnectFour\Domain\Game\WinningStrategy\WinningStrategy;
+use Marein\ConnectFour\Domain\Game\WinningRule\CommonWinningRule;
+use Marein\ConnectFour\Domain\Game\WinningRule\WinningRule;
 
 final class Configuration
 {
@@ -13,20 +13,20 @@ final class Configuration
     private $size;
 
     /**
-     * @var WinningStrategy
+     * @var WinningRule
      */
-    private $winningStrategy;
+    private $winningRule;
 
     /**
      * Configuration constructor.
      *
-     * @param Size            $size
-     * @param WinningStrategy $winningStrategy
+     * @param Size        $size
+     * @param WinningRule $winningRule
      */
-    private function __construct(Size $size, WinningStrategy $winningStrategy)
+    private function __construct(Size $size, WinningRule $winningRule)
     {
         $this->size = $size;
-        $this->winningStrategy = $winningStrategy;
+        $this->winningRule = $winningRule;
     }
 
     /*************************************************************
@@ -42,21 +42,21 @@ final class Configuration
     {
         return new self(
             new Size(7, 6),
-            new CommonWinningStrategy()
+            new CommonWinningRule()
         );
     }
 
     /**
      * Create a custom [Configuration].
      *
-     * @param Size            $size
-     * @param WinningStrategy $winningStrategy
+     * @param Size        $size
+     * @param WinningRule $winningRule
      *
      * @return Configuration
      */
-    public static function custom(Size $size, WinningStrategy $winningStrategy): Configuration
+    public static function custom(Size $size, WinningRule $winningRule): Configuration
     {
-        return new self($size, $winningStrategy);
+        return new self($size, $winningRule);
     }
 
     /*************************************************************
@@ -74,12 +74,12 @@ final class Configuration
     }
 
     /**
-     * Returns the [WinningStrategy].
+     * Returns the [WinningRule].
      *
-     * @return WinningStrategy
+     * @return WinningRule
      */
-    public function winningStrategy(): WinningStrategy
+    public function winningRule(): WinningRule
     {
-        return $this->winningStrategy;
+        return $this->winningRule;
     }
 }

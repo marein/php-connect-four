@@ -98,7 +98,7 @@ class Game
 
         $this->board = $this->board->dropStone($this->currentPlayer()->stone(), $column);
 
-        $isWin = $this->configuration()->winningStrategy()->calculate($this->board);
+        $isWin = $this->configuration()->winningRule()->calculate($this->board);
 
         if ($isWin) {
             $this->winner = $this->currentPlayer();

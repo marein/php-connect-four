@@ -6,7 +6,7 @@ use Marein\ConnectFour\Domain\Game\Exception\GameFinishedException;
 use Marein\ConnectFour\Domain\Game\Exception\PlayersHaveSameStoneException;
 use Marein\ConnectFour\Domain\Game\Exception\PlayersNotUniqueException;
 use Marein\ConnectFour\Domain\Game\Exception\UnexpectedPlayerException;
-use Marein\ConnectFour\Domain\Game\WinningStrategy\CommonWinningStrategy;
+use Marein\ConnectFour\Domain\Game\WinningRule\CommonWinningRule;
 use PHPUnit\Framework\TestCase;
 
 class GameTest extends TestCase
@@ -171,7 +171,7 @@ class GameTest extends TestCase
         return Game::open(
             Configuration::custom(
                 new Size(2, 4),
-                new CommonWinningStrategy()
+                new CommonWinningRule()
             ),
             new Player(self::PLAYER1, Stone::red()),
             new Player(self::PLAYER2, Stone::yellow())
@@ -186,7 +186,7 @@ class GameTest extends TestCase
         return Game::open(
             Configuration::custom(
                 new Size(4, 2),
-                new CommonWinningStrategy()
+                new CommonWinningRule()
             ),
             new Player(self::PLAYER1, Stone::red()),
             new Player(self::PLAYER2, Stone::yellow())
@@ -201,7 +201,7 @@ class GameTest extends TestCase
         return Game::open(
             Configuration::custom(
                 new Size(4, 4),
-                new CommonWinningStrategy()
+                new CommonWinningRule()
             ),
             new Player(self::PLAYER1, Stone::red()),
             new Player(self::PLAYER2, Stone::yellow())

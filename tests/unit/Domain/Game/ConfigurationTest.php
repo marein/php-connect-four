@@ -2,7 +2,7 @@
 
 namespace Marein\ConnectFour\Domain\Game;
 
-use Marein\ConnectFour\Domain\Game\WinningStrategy\CommonWinningStrategy;
+use Marein\ConnectFour\Domain\Game\WinningRule\CommonWinningRule;
 use PHPUnit\Framework\TestCase;
 
 class ConfigurationTest extends TestCase
@@ -16,7 +16,7 @@ class ConfigurationTest extends TestCase
 
         $this->assertEquals(7, $configuration->size()->width());
         $this->assertEquals(6, $configuration->size()->height());
-        $this->assertInstanceOf(CommonWinningStrategy::class, $configuration->winningStrategy());
+        $this->assertInstanceOf(CommonWinningRule::class, $configuration->winningRule());
     }
 
     /**
@@ -26,11 +26,11 @@ class ConfigurationTest extends TestCase
     {
         $configuration = Configuration::custom(
             new Size(7, 6),
-            new CommonWinningStrategy()
+            new CommonWinningRule()
         );
 
         $this->assertEquals(7, $configuration->size()->width());
         $this->assertEquals(6, $configuration->size()->height());
-        $this->assertInstanceOf(CommonWinningStrategy::class, $configuration->winningStrategy());
+        $this->assertInstanceOf(CommonWinningRule::class, $configuration->winningRule());
     }
 }

@@ -1,13 +1,13 @@
 <?php
 
-namespace Marein\ConnectFour\Domain\Game\WinningStrategy;
+namespace Marein\ConnectFour\Domain\Game\WinningRule;
 
 use Marein\ConnectFour\Domain\Game\Board;
 use Marein\ConnectFour\Domain\Game\Size;
 use Marein\ConnectFour\Domain\Game\Stone;
 use PHPUnit\Framework\TestCase;
 
-class VerticalWinningStrategyTest extends TestCase
+class VerticalWinningRuleTest extends TestCase
 {
     /**
      * @test
@@ -16,18 +16,18 @@ class VerticalWinningStrategyTest extends TestCase
     {
         $size = new Size(7, 6);
         $board = Board::empty($size);
-        $verticalWinningStrategy = new VerticalWinningStrategy(4);
+        $verticalWinningRule = new VerticalWinningRule(4);
 
-        $this->assertFalse($verticalWinningStrategy->calculate($board));
-
-        $board = $board->dropStone(Stone::red(), 1);
-        $board = $board->dropStone(Stone::red(), 1);
-        $board = $board->dropStone(Stone::red(), 1);
-
-        $this->assertFalse($verticalWinningStrategy->calculate($board));
+        $this->assertFalse($verticalWinningRule->calculate($board));
 
         $board = $board->dropStone(Stone::red(), 1);
+        $board = $board->dropStone(Stone::red(), 1);
+        $board = $board->dropStone(Stone::red(), 1);
 
-        $this->assertTrue($verticalWinningStrategy->calculate($board));
+        $this->assertFalse($verticalWinningRule->calculate($board));
+
+        $board = $board->dropStone(Stone::red(), 1);
+
+        $this->assertTrue($verticalWinningRule->calculate($board));
     }
 }

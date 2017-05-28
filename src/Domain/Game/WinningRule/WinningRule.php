@@ -1,13 +1,13 @@
 <?php
 
-namespace Marein\ConnectFour\Domain\Game\WinningStrategy;
+namespace Marein\ConnectFour\Domain\Game\WinningRule;
 
 use Marein\ConnectFour\Domain\Game\Board;
 
-interface WinningStrategy
+interface WinningRule
 {
     /**
-     * Returns true if the strategy finds a match.
+     * Returns true if the rule applies.
      *
      * @param Board $board
      *
