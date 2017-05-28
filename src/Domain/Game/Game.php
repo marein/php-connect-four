@@ -70,6 +70,8 @@ class Game
      * @param Player        $player2
      *
      * @return Game
+     * @throws PlayersNotUniqueException
+     * @throws PlayersHaveSameStoneException
      */
     public static function open(Configuration $configuration, Player $player1, Player $player2): Game
     {
