@@ -50,7 +50,7 @@ namespace {
         // Clear screen
         echo "\033\143" . PHP_EOL;
 
-        $width = $game->configuration()->size()->width();
+        $width = $game->board()->size()->width();
         $fillLength = strlen((string)$width);
         $fillLength = $fillLength % 2 == 0 ? $fillLength + 1 : $fillLength;
 
@@ -88,7 +88,7 @@ namespace {
 
     function consoleMove(Game $game, string $id): void
     {
-        $width = $game->configuration()->size()->width();
+        $width = $game->board()->size()->width();
 
         try {
             $column = trim(readline('Choose your column [1 - ' . $width . ']: '));
@@ -104,7 +104,7 @@ namespace {
     {
         echo 'Waiting for NPC...';
 
-        $width = $game->configuration()->size()->width();
+        $width = $game->board()->size()->width();
 
         usleep((int)(0.5 * 1000000));
 

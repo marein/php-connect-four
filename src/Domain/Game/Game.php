@@ -8,18 +8,19 @@ use Marein\ConnectFour\Domain\Game\Exception\OutOfSizeException;
 use Marein\ConnectFour\Domain\Game\Exception\PlayersHaveSameStoneException;
 use Marein\ConnectFour\Domain\Game\Exception\PlayersNotUniqueException;
 use Marein\ConnectFour\Domain\Game\Exception\UnexpectedPlayerException;
+use Marein\ConnectFour\Domain\Game\WinningRule\WinningRule;
 
 class Game
 {
     /**
-     * @var Configuration
+     * @var WinningRule
      */
-    private $configuration;
+    private $winningRule;
 
     /**
      * @var int
      */
-    private $numberOfMoves;
+    private $numberOfMovesUntilDraw;
 
     /**
      * @var Board
@@ -51,9 +52,13 @@ class Game
         $this->guardPlayersAreUnique($player1, $player2);
         $this->guardPlayersHaveDifferentStones($player1, $player2);
 
-        $this->configuration = $configuration;
-        $this->numberOfMoves = 0;
-        $this->board = Board::empty($configuration->size());
+        $size = $configuration->size();
+        $width = $size->width();
+        $height = $size->height();
+
+        $this->winningRule = $configuration->winningRule();
+        $this->numberOfMovesUntilDraw = $width * $height;
+        $this->board = Board::empty($size);
         $this->players = [$player1, $player2];
         $this->winner = null;
     }
@@ -100,13 +105,13 @@ class Game
 
         $this->board = $this->board->dropStone($this->currentPlayer()->stone(), $column);
 
-        $isWin = $this->configuration()->winningRule()->calculate($this->board);
+        $isWin = $this->winningRule->calculate($this->board);
 
         if ($isWin) {
             $this->winner = $this->currentPlayer();
         }
 
-        $this->numberOfMoves++;
+        $this->numberOfMovesUntilDraw--;
 
         $this->switchPlayer();
     }
@@ -204,16 +209,6 @@ class Game
     }
 
     /**
-     * Returns the [Configuration] of the [Game].
-     *
-     * @return Configuration
-     */
-    public function configuration(): Configuration
-    {
-        return $this->configuration;
-    }
-
-    /**
      * Returns the winner if a match was found during the last move.
      *
      * @return Player|null
@@ -232,7 +227,7 @@ class Game
     {
         return
             !$this->winner &&
-            $this->numberOfMoves == $this->configuration()->size()->width() * $this->configuration()->size()->height();
+            $this->numberOfMovesUntilDraw == 0;
     }
 
     /**
