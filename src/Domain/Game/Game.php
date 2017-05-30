@@ -221,16 +221,6 @@ class Game
     }
 
     /**
-     * Returns true if the [Game] is draw.
-     *
-     * @return bool
-     */
-    public function isDraw(): bool
-    {
-        return $this->state->isDrawn();
-    }
-
-    /**
      * Returns true if the [Game] is won.
      *
      * @return bool

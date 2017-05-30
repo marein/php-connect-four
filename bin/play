@@ -27,17 +27,17 @@ namespace {
 
     renderGame($game);
 
-    while (!$game->isDraw() && !$game->isWin()) {
+    while ($game->state()->isRunning()) {
         consoleMove($game, $player1Id);
         renderGame($game);
 
-        if (!$game->isWin()) {
+        if ($game->state()->isRunning()) {
             cpuMove($game, $player2Id);
             renderGame($game);
         }
     }
 
-    if ($game->isDraw()) {
+    if ($game->state()->isDrawn()) {
         echo 'Draw';
     } else {
         echo 'Winner ' . colorizeStoneColor((string)$game->state()->winner()->stone()->color());
