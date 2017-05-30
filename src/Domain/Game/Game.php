@@ -211,6 +211,16 @@ class Game
     }
 
     /**
+     * Returns the [State] of the [Game].
+     *
+     * @return State
+     */
+    public function state(): State
+    {
+        return $this->state;
+    }
+
+    /**
      * Returns the winner if a match was found during the last move.
      *
      * @return Player|null
