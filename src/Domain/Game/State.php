@@ -35,6 +35,8 @@ final class State
      *************************************************************/
 
     /**
+     * Create a running [State].
+     *
      * @return State
      */
     public static function running(): State
@@ -43,6 +45,10 @@ final class State
     }
 
     /**
+     * Create a won [State].
+     *
+     * @param Player $player
+     *
      * @return State
      */
     public static function won(Player $player): State
@@ -51,6 +57,8 @@ final class State
     }
 
     /**
+     * Create a drawn [State].
+     *
      * @return State
      */
     public static function drawn(): State
@@ -63,6 +71,8 @@ final class State
      *************************************************************/
 
     /**
+     * Returns true if the [State] is running.
+     *
      * @return bool
      */
     public function isRunning(): bool
@@ -71,6 +81,8 @@ final class State
     }
 
     /**
+     * Returns true if the [State] represents a win.
+     *
      * @return bool
      */
     public function isWon(): bool
@@ -79,6 +91,8 @@ final class State
     }
 
     /**
+     * Returns true if the [State] represents a draw.
+     *
      * @return bool
      */
     public function isDrawn(): bool
@@ -87,6 +101,8 @@ final class State
     }
 
     /**
+     * Returns a [Player] if present.
+     *
      * @return Player|null
      */
     public function winner(): ?Player
