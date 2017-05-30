@@ -31,7 +31,7 @@ class GameTest extends TestCase
         $game->move(self::PLAYER2, 2);
 
         $this->assertTrue($game->state()->isDrawn());
-        $this->assertFalse($game->isWin());
+        $this->assertFalse($game->state()->isWon());
     }
 
     /**
@@ -51,7 +51,7 @@ class GameTest extends TestCase
 
         $this->assertEquals(self::PLAYER1, $game->state()->winner()->id());
         $this->assertFalse($game->state()->isDrawn());
-        $this->assertTrue($game->isWin());
+        $this->assertTrue($game->state()->isWon());
     }
 
     /**
@@ -80,7 +80,7 @@ class GameTest extends TestCase
 
         $this->assertEquals(self::PLAYER2, $game->state()->winner()->id());
         $this->assertFalse($game->state()->isDrawn());
-        $this->assertTrue($game->isWin());
+        $this->assertTrue($game->state()->isWon());
     }
 
     /**

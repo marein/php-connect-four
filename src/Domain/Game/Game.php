@@ -219,14 +219,4 @@ class Game
     {
         return $this->state;
     }
-
-    /**
-     * Returns true if the [Game] is won.
-     *
-     * @return bool
-     */
-    public function isWin(): bool
-    {
-        return $this->state->isWon();
-    }
 }
