@@ -40,7 +40,7 @@ namespace {
     if ($game->isDraw()) {
         echo 'Draw';
     } else {
-        echo 'Winner ' . colorizeStoneColor((string)$game->winner()->stone()->color());
+        echo 'Winner ' . colorizeStoneColor((string)$game->state()->winner()->stone()->color());
     }
 
     echo PHP_EOL . PHP_EOL;

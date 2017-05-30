@@ -221,16 +221,6 @@ class Game
     }
 
     /**
-     * Returns the winner if a match was found during the last move.
-     *
-     * @return Player|null
-     */
-    public function winner(): ?Player
-    {
-        return $this->state->winner();
-    }
-
-    /**
      * Returns true if the [Game] is draw.
      *
      * @return bool
