@@ -33,9 +33,9 @@ class Game
     private $players;
 
     /**
-     * @var Player
+     * @var State
      */
-    private $winner;
+    private $state;
 
     /**
      * Game constructor.
@@ -60,7 +60,7 @@ class Game
         $this->numberOfMovesUntilDraw = $width * $height;
         $this->board = Board::empty($size);
         $this->players = [$player1, $player2];
-        $this->winner = null;
+        $this->state = State::running();
     }
 
     /*************************************************************
@@ -107,11 +107,13 @@ class Game
 
         $isWin = $this->winningRule->calculate($this->board);
 
-        if ($isWin) {
-            $this->winner = $this->currentPlayer();
-        }
-
         $this->numberOfMovesUntilDraw--;
+
+        if ($isWin) {
+            $this->state = State::won($this->currentPlayer());
+        } else if ($this->numberOfMovesUntilDraw == 0) {
+            $this->state = State::drawn();
+        }
 
         $this->switchPlayer();
     }
@@ -179,7 +181,7 @@ class Game
      */
     private function guardGameFinished(): void
     {
-        if ($this->isDraw() || $this->isWin()) {
+        if (!$this->state->isRunning()) {
             throw new GameFinishedException();
         }
     }
@@ -215,7 +217,7 @@ class Game
      */
     public function winner(): ?Player
     {
-        return $this->winner;
+        return $this->state->winner();
     }
 
     /**
@@ -225,9 +227,7 @@ class Game
      */
     public function isDraw(): bool
     {
-        return
-            !$this->winner &&
-            $this->numberOfMovesUntilDraw == 0;
+        return $this->state->isDrawn();
     }
 
     /**
@@ -237,6 +237,6 @@ class Game
      */
     public function isWin(): bool
     {
-        return $this->winner !== null;
+        return $this->state->isWon();
     }
 }
