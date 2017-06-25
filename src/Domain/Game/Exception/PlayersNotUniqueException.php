@@ -2,7 +2,7 @@
 
 namespace Marein\ConnectFour\Domain\Game\Exception;
 
-class PlayersNotUniqueException extends GameException
+final class PlayersNotUniqueException extends GameException
 {
 
 }

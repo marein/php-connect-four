@@ -2,7 +2,7 @@
 
 namespace Marein\ConnectFour\Domain\Game\Exception;
 
-class InvalidSizeException extends GameException
+final class InvalidSizeException extends GameException
 {
 
 }

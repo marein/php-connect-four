@@ -2,7 +2,7 @@
 
 namespace Marein\ConnectFour\Domain\Game\Exception;
 
-class InvalidNumberOfRequiredMatchesException extends GameException
+final class InvalidNumberOfRequiredMatchesException extends GameException
 {
 
 }

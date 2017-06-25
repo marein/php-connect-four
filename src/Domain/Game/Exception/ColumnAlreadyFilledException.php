@@ -2,7 +2,7 @@
 
 namespace Marein\ConnectFour\Domain\Game\Exception;
 
-class ColumnAlreadyFilledException extends GameException
+final class ColumnAlreadyFilledException extends GameException
 {
 
 }
